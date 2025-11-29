@@ -61,6 +61,27 @@ export function DatePickerInput({ yearField, monthField, dayField, label }: Date
             selected={displayDate ? new Date(displayDate) : undefined}
             onSelect={handleSelect}
             captionLayout="dropdown"
+            className={cn(
+              "w-full rounded-lg border-0 text-sm text-gray-800",
+              "[&_table]:mx-auto [&_table]:mt-4 [&_table]:w-full",
+
+              // 날짜 버튼 스타일
+              "[&_button]:rounded-md [&_button]:py-2 [&_button]:text-sm [&_button]:text-gray-700",
+              "[&_button]:focus:ring-0 [&_button]:focus:outline-none",
+
+              // 선택된 날짜
+              "[&_button[aria-selected='true']]:bg-main-pink [&_button[aria-selected='true']]:text-white",
+              "[&_button[aria-selected='true']:hover]:bg-main-pink",
+
+              // 드롭다운(월/연도) 테두리 제거
+              "[&_select]:border-0 [&_select]:ring-0 [&_select]:outline-none [&_select]:focus:ring-0 [&_select]:focus:outline-none",
+              "[&_select]:bg-transparent",
+
+              // 드롭다운 좌우 여백
+              "[&_select]:px-2 [&_select]:py-1",
+
+              "[&_div[data-cap='dropdown']]:pb-3",
+            )}
           />
         </PopoverContent>
       </Popover>
