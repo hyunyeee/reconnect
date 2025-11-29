@@ -21,9 +21,16 @@ export const errorMessages = {
   birth: {
     yearRequired: "출생 연도를 입력해주세요.",
     yearFormat: "출생 연도는 4자리 숫자여야 합니다.",
-    dayRequired: "생년월일을 입력해주세요.",
-    dayFormat: "월일은 4자리 숫자(예: 0705) 형식이어야 합니다.",
+
+    monthRequired: "출생 월을 입력해주세요.",
+    monthFormat: "출생 월은 01~12 형식이어야 합니다.",
+
+    dayRequired: "출생 일을 입력해주세요.",
+    dayFormat: "출생 일은 01~31 형식이어야 합니다.",
+
+    invalidDate: "유효한 날짜가 아닙니다.",
   },
+
   gender: {
     required: "성별을 선택해주세요.",
   },
