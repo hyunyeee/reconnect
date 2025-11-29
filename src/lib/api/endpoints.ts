@@ -11,7 +11,7 @@ export const API = {
   },
   MEMBER: {
     SIGNUP: "/normalMembers",
-    LOGIN: "/auth/login",
+    LOGIN: "/login",
     LOGOUT: "/auth/logout",
   },
 } as const;
