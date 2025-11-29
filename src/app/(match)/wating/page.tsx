@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { HeartHandshake } from "lucide-react"; // 아이콘 추가
+import { HeartHandshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -28,11 +28,12 @@ export default function WaitingClient() {
           }}
           className="mb-2 inline-block md:mb-4"
         >
-          <HeartHandshake className="size-10 text-pink-500 md:size-20" />
+          <HeartHandshake className="size-14 text-pink-500 md:size-20" />
         </motion.div>
 
+        {/* 헤딩 텍스트 */}
         <motion.h1
-          className="text-2xl font-extrabold tracking-tight text-gray-900 md:text-4xl"
+          className="mb-2 text-2xl font-extrabold tracking-tight text-gray-900 md:text-4xl"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -41,15 +42,14 @@ export default function WaitingClient() {
         </motion.h1>
 
         {/* 안내 사항 */}
-        <motion.div
+        <motion.p
+          className="text-base text-gray-600 md:text-lg"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.5 }}
         >
-          <p className="mt-2 flex items-center text-base text-gray-600 md:text-lg">
-            <span>두 분의 마음이 닿으면 알림을 보내드리겠습니다.</span>
-          </p>
-        </motion.div>
+          두 분의 마음이 닿으면 알림을 보내드리겠습니다.
+        </motion.p>
 
         {/* 돌아가기 버튼 */}
         <motion.div
@@ -61,7 +61,7 @@ export default function WaitingClient() {
           <Link href="/" passHref>
             <Button
               variant="outline"
-              className="bg-main-pink h-10 w-full text-white shadow-none transition duration-300 hover:bg-[#A41847] hover:text-white sm:w-auto"
+              className="bg-main-pink h-10 w-full border-none text-white shadow-none transition duration-300 hover:bg-[#A41847] hover:text-white md:w-auto"
             >
               메인 페이지로 돌아가기
             </Button>
