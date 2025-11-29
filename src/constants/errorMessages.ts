@@ -14,6 +14,7 @@ export const errorMessages = {
   password: {
     min: "비밀번호는 최소 10자 이상이어야 합니다.",
     rule: "비밀번호는 대소문자, 숫자, 특수문자 중 3가지 이상 조합이어야 합니다.",
+    required: "비밀번호를 입력해주세요.",
   },
   passwordConfirm: {
     notMatch: "비밀번호가 일치하지 않습니다.",

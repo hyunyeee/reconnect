@@ -7,8 +7,7 @@ import type { ApiError, ApiResponse } from "@/types/api";
 import { apiClient } from "@/lib/api/client";
 import { API } from "@/lib/api/endpoints";
 
-import type { MemberFormData } from "@/schemas/memberSchema";
-import type { LoginFormData } from "@/schemas/memberSchema";
+import type { LoginFormData, MemberFormData } from "@/schemas/memberSchema";
 
 export const useSignup = () => {
   return useMutation<ApiResponse<null>, ApiError, MemberFormData>({

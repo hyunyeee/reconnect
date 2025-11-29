@@ -68,3 +68,10 @@ export const memberSchema = z
   );
 
 export type MemberFormData = z.infer<typeof memberSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email({ message: e.email.invalid }),
+  password: z.string().min(1, { message: e.password.required }),
+});
+
+export type LoginFormData = z.infer<typeof loginSchema>;
