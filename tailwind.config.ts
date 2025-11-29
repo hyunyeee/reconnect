@@ -1,7 +1,8 @@
 module.exports = {
   content: [
-    "./pages/**/*.{js,jsx,ts,tsx}",
-    "./components/**/*.{js,jsx,ts,tsx}",
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/app/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
@@ -9,13 +10,10 @@ module.exports = {
         pretendard: ["var(--font-pretendard)"],
       },
       colors: {
-        "page-green": "var(--color-page-green)",
-        "light-green-main": "var(--color-light-green)",
-        "primary-green": "var(--color-primary-green)",
-        "dark-green": "var(--color-dark-green)",
+        "main-pink": "var(--color-main-pink)",
       },
     },
   },
-  darkMode: "media", // class
+  darkMode: "media",
   plugins: ["tailwindcss-animate"],
 };
