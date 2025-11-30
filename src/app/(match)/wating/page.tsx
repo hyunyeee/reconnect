@@ -28,7 +28,7 @@ export default function WaitingClient() {
           }}
           className="mb-2 inline-block md:mb-4"
         >
-          <HeartHandshake className="size-14 text-pink-500 md:size-20" />
+          <HeartHandshake className="text-main-pink size-14 md:size-20" />
         </motion.div>
 
         {/* 헤딩 텍스트 */}
