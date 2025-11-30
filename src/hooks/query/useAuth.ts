@@ -25,7 +25,7 @@ export const useSignup = () => {
         description: "가입이 성공적으로 완료되었습니다.",
       });
 
-      router.push("/signup");
+      router.push("/login");
     },
     onError: (err) => {
       toast.error("회원가입 실패", {
