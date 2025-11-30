@@ -14,4 +14,7 @@ export const API = {
     LOGIN: "/login",
     LOGOUT: "/auth/logout",
   },
+  MATCH: {
+    REQUEST: "/matches/request",
+  },
 } as const;
