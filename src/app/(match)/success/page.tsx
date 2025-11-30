@@ -52,7 +52,7 @@ export default function MatchedClient() {
   return (
     <main className="relative flex min-h-screen max-w-md flex-col items-center justify-center overflow-hidden px-4 py-6">
       <motion.div
-        className="text-center"
+        className="w-full text-center"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
