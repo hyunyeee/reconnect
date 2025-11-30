@@ -47,10 +47,13 @@ export default function LandingClient() {
 
   return (
     <main className="relative flex min-h-screen max-w-md flex-col items-center justify-center overflow-hidden px-4 py-6">
-      <div className="w-full text-center">
-        {/* --- PopAnimatedText: scope를 넘겨주기 */}
-        <Heart className="fill-main-pink text-main-pink size-5" />
+      <div className="w-full">
+        <div className="relative mb-6 size-5">
+          <Heart className="fill-main-pink text-main-pink absolute top-0 left-0 size-5" />
+          <Heart className="fill-main-pink text-main-pink/60 absolute top-0 left-0 size-5 animate-ping duration-1700" />
+        </div>
 
+        {/* --- PopAnimatedText: scope를 넘겨주기 */}
         <PopAnimatedText
           scope={h1Scope}
           texts={["다시 만나고 싶은", "사람이 있나요?"]}
@@ -81,7 +84,7 @@ export default function LandingClient() {
         <div
           ref={buttonsScope}
           style={{ opacity: 0, transform: "translateY(20px)" }}
-          className="mt-12 md:mt-16"
+          className="mt-14 md:mt-18"
         >
           <Link href="/login" passHref>
             <Button
