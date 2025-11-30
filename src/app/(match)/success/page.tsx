@@ -50,7 +50,7 @@ export default function MatchedClient() {
   }, [heartControls, textControls, buttonControls]);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-8">
+    <main className="relative flex min-h-screen max-w-md flex-col items-center justify-center overflow-hidden px-4 py-6">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, scale: 0.9 }}
