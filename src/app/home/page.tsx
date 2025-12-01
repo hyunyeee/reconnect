@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex flex-col gap-4 text-lg font-semibold">
+    <main className="flex max-w-md flex-col gap-4 px-4 py-6 text-lg font-semibold">
       <Link href="/match" className="hover:text-main-pink">
         상대방 정보 등록하기
       </Link>
