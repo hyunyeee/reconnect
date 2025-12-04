@@ -7,6 +7,7 @@ import { matchSchema, MatchFormData } from "@/schemas/matchSchema";
 import { NormalInput } from "@/components/form/NormalInput";
 import { Button } from "@/components/ui/button";
 import { DesireSlider } from "@/components/form/DesireSlider";
+import { useMatchRequest } from "@/hooks/query/useMatch";
 
 export default function MatchRegisterForm() {
   const methods = useForm<MatchFormData>({
@@ -20,8 +21,10 @@ export default function MatchRegisterForm() {
     },
   });
 
+  const { mutate: requestMatch, isPending } = useMatchRequest();
+
   const onSubmit: SubmitHandler<MatchFormData> = (data) => {
-    console.log("📌 매칭 등록 데이터:", data);
+    requestMatch(data);
   };
 
   return (
@@ -42,9 +45,10 @@ export default function MatchRegisterForm() {
         <div className="pt-4">
           <Button
             type="submit"
+            disabled={isPending}
             className="bg-main-pink w-full rounded-md py-3 text-white transition hover:bg-[#A41847]"
           >
-            등록하기
+            {isPending ? "등록 중..." : "등록하기"}
           </Button>
         </div>
       </form>

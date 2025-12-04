@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import type { ApiError, ApiResponse } from "@/types/api";
 import { apiClient } from "@/lib/api/client";
@@ -10,6 +11,8 @@ import { API } from "@/lib/api/endpoints";
 import type { LoginFormData, MemberFormData } from "@/schemas/memberSchema";
 
 export const useSignup = () => {
+  const router = useRouter();
+
   return useMutation<ApiResponse<null>, ApiError, MemberFormData>({
     mutationFn: async (payload) => {
       return await apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
@@ -21,6 +24,8 @@ export const useSignup = () => {
       toast.success("회원가입 완료", {
         description: "가입이 성공적으로 완료되었습니다.",
       });
+
+      router.push("/login");
     },
     onError: (err) => {
       toast.error("회원가입 실패", {
@@ -31,17 +36,26 @@ export const useSignup = () => {
 };
 
 export const useLogin = () => {
+  const router = useRouter();
+
   return useMutation<ApiResponse<null>, ApiError, LoginFormData>({
     mutationFn: async (payload) => {
+      const serverPayload = {
+        memberEmail: payload.email,
+        memberPassword: payload.password,
+      };
+
       return await apiClient<ApiResponse<null>>(API.MEMBER.LOGIN, {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify(serverPayload),
       });
     },
     onSuccess: () => {
       toast.success("로그인 성공", {
         description: "반가워요!",
       });
+
+      router.push("/");
     },
     onError: (err) => {
       toast.error("로그인 실패", {
@@ -52,6 +66,8 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
+  const router = useRouter();
+
   return useMutation<ApiResponse<null>, ApiError, void>({
     mutationFn: async () => {
       return await apiClient<ApiResponse<null>>(API.MEMBER.LOGOUT, {
@@ -60,6 +76,8 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       toast.success("로그아웃 되었습니다.");
+      router.refresh(); // 새 쿠키 적용 위해 새로고침
+      router.push("/login");
     },
     onError: (err) => {
       toast.error("로그아웃 실패", {
