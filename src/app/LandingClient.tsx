@@ -91,17 +91,7 @@ export default function LandingClient() {
               className="group bg-main-pink h-10 w-full border-none text-white shadow-none transition duration-300 hover:bg-[#A41847] hover:text-white md:w-auto"
               variant="default"
             >
-              재회를 위한 마음 등록하기
-              <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button>
-          </Link>
-
-          <Link href="/home" passHref>
-            <Button
-              className="group bg-main-pink mt-3 h-10 w-full border-none text-white shadow-none transition duration-300 hover:bg-[#A41847] hover:text-white md:w-auto"
-              variant="default"
-            >
-              메뉴 선택 페이지(로그인 후에만 접근 가능한 메뉴들)
+              ✨ 재회 가능성 테스트 시작하기
               <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
           </Link>
