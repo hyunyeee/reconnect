@@ -12,9 +12,10 @@ export const API = {
   MEMBER: {
     SIGNUP: "/normalMembers",
     LOGIN: "/login",
-    LOGOUT: "/auth/logout",
+    LOGOUT: "/logout",
   },
   MATCH: {
     REQUEST: "/matches/request",
+    RESULT: "/matches/result",
   },
 } as const;

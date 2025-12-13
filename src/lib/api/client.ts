@@ -16,8 +16,8 @@ export async function apiClient<T>(path: string, options?: RequestInit): Promise
 
   if (!res.ok) {
     throw {
-      code: data.code || "UNKNOWN_ERROR",
-      message: data.message || "서버 오류가 발생했습니다.",
+      code: data.code || "NETWORK_ERROR",
+      message: data.message || "서버와 통신할 수 없습니다.",
       status: res.status,
     };
   }

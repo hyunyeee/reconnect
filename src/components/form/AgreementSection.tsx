@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { TermsContent } from "@/components/form/TermsContent";
 
 export const AgreementSection = () => {
   const {
@@ -16,6 +18,8 @@ export const AgreementSection = () => {
   const emailAgree = !!watch("emailAgree");
 
   const isAllChecked = privacyAgree && useAgree && emailAgree;
+
+  const [openTerm, setOpenTerm] = useState<"use" | "privacy" | null>(null);
 
   const handleAllConsentClick = () => {
     const newValue = !isAllChecked;
@@ -32,62 +36,109 @@ export const AgreementSection = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
+    <section className="space-y-4 rounded-xl border bg-gray-50 p-4">
       {/* 전체 동의 */}
-      <div className="flex items-center space-x-2">
+      <label className="flex cursor-pointer items-center gap-3">
+        <Checkbox id="allAgree" checked={isAllChecked} onCheckedChange={handleAllConsentClick} />
+        <span className="text-sm font-semibold text-gray-900">약관 전체 동의</span>
+      </label>
+
+      <div className="h-px bg-gray-200" />
+
+      {/* 이용약관 */}
+      <div className="space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <label className="flex cursor-pointer items-start gap-3">
+            <Checkbox
+              id="useAgree"
+              checked={useAgree}
+              onCheckedChange={(checked) => handleCheckClick("useAgree", checked === true)}
+            />
+            <div>
+              <p className="text-sm text-gray-900">
+                이용약관 동의 <span className="text-main-pink">(필수)</span>
+              </p>
+              {errors.useAgree && (
+                <p className="mt-1 text-xs text-red-500">{errors.useAgree.message as string}</p>
+              )}
+            </div>
+          </label>
+
+          <button
+            type="button"
+            onClick={() => setOpenTerm(openTerm === "use" ? null : "use")}
+            className="flex items-center text-xs text-gray-400 hover:text-gray-600"
+          >
+            보기
+            {openTerm === "use" ? (
+              <ChevronUp className="ml-1 h-4 w-4" />
+            ) : (
+              <ChevronDown className="ml-1 h-4 w-4" />
+            )}
+          </button>
+        </div>
+
+        {openTerm === "use" && (
+          <div className="rounded-lg border bg-white p-4">
+            <TermsContent />
+          </div>
+        )}
+      </div>
+
+      {/* 개인정보 */}
+      <div className="space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <label className="flex cursor-pointer items-start gap-3">
+            <Checkbox
+              id="privacyAgree"
+              checked={privacyAgree}
+              onCheckedChange={(checked) => handleCheckClick("privacyAgree", checked === true)}
+            />
+            <div>
+              <p className="text-sm text-gray-900">
+                개인정보 수집 및 이용 동의 <span className="text-main-pink">(필수)</span>
+              </p>
+              {errors.privacyAgree && (
+                <p className="mt-1 text-xs text-red-500">{errors.privacyAgree.message as string}</p>
+              )}
+            </div>
+          </label>
+
+          <button
+            type="button"
+            onClick={() => setOpenTerm(openTerm === "privacy" ? null : "privacy")}
+            className="flex items-center text-xs text-gray-400 hover:text-gray-600"
+          >
+            보기
+            {openTerm === "privacy" ? (
+              <ChevronUp className="ml-1 h-4 w-4" />
+            ) : (
+              <ChevronDown className="ml-1 h-4 w-4" />
+            )}
+          </button>
+        </div>
+
+        {openTerm === "privacy" && (
+          <div className="rounded-lg border bg-white p-4">
+            <TermsContent />
+          </div>
+        )}
+      </div>
+
+      {/* 마케팅 */}
+      <label className="flex cursor-pointer items-start gap-3 pt-2">
         <Checkbox
-          id="allAgree"
-          checked={isAllChecked}
-          onCheckedChange={() => handleAllConsentClick()}
+          id="emailAgree"
+          checked={emailAgree}
+          onCheckedChange={(checked) => handleCheckClick("emailAgree", checked === true)}
         />
-        <Label htmlFor="allAgree" className="cursor-pointer font-medium">
-          전체동의
-        </Label>
-      </div>
-
-      <div className="ml-1 h-px bg-gray-200" />
-
-      {/* 개별 항목 */}
-      <div className="ml-6 space-y-3 text-sm">
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="useAgree"
-            checked={useAgree}
-            onCheckedChange={(checked) => handleCheckClick("useAgree", checked === true)}
-          />
-          <div>
-            <Label htmlFor="useAgree">이용약관 동의 (필수)</Label>
-            {errors.useAgree && (
-              <p className="mt-1 text-xs text-red-500">{errors.useAgree.message as string}</p>
-            )}
-          </div>
+        <div>
+          <p className="text-sm text-gray-700">
+            마케팅 활용 및 이메일 수신 동의 <span className="text-gray-400">(선택)</span>
+          </p>
+          <p className="mt-1 text-xs text-gray-400">이벤트 및 서비스 안내를 받아볼 수 있어요</p>
         </div>
-
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="privacyAgree"
-            checked={privacyAgree}
-            onCheckedChange={(checked) => handleCheckClick("privacyAgree", checked === true)}
-          />
-          <div>
-            <Label htmlFor="privacyAgree">개인정보 수집 및 이용 동의 (필수)</Label>
-            {errors.privacyAgree && (
-              <p className="mt-1 text-xs text-red-500">{errors.privacyAgree.message as string}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="emailAgree"
-            checked={emailAgree}
-            onCheckedChange={(checked) => handleCheckClick("emailAgree", checked === true)}
-          />
-          <div>
-            <Label htmlFor="emailAgree">마케팅 활용 및 이메일 광고 수신 동의 (선택)</Label>
-          </div>
-        </div>
-      </div>
-    </div>
+      </label>
+    </section>
   );
 };

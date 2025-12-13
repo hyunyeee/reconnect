@@ -9,6 +9,8 @@ import { apiClient } from "@/lib/api/client";
 import { API } from "@/lib/api/endpoints";
 
 import type { LoginFormData, MemberFormData } from "@/schemas/memberSchema";
+import { authAtom } from "@/atoms/auth";
+import { useSetAtom } from "jotai";
 
 export const useSignup = () => {
   const router = useRouter();
@@ -37,6 +39,7 @@ export const useSignup = () => {
 
 export const useLogin = () => {
   const router = useRouter();
+  const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, LoginFormData>({
     mutationFn: async (payload) => {
@@ -50,13 +53,17 @@ export const useLogin = () => {
         body: JSON.stringify(serverPayload),
       });
     },
+
     onSuccess: () => {
+      setAuth({ isLoggedIn: true });
+
       toast.success("로그인 성공", {
         description: "반가워요!",
       });
 
-      router.push("/");
+      router.push("/match");
     },
+
     onError: (err) => {
       toast.error("로그인 실패", {
         description: err.message ?? "아이디 또는 비밀번호를 확인해주세요.",
@@ -67,6 +74,7 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const router = useRouter();
+  const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, void>({
     mutationFn: async () => {
@@ -74,11 +82,13 @@ export const useLogout = () => {
         method: "POST",
       });
     },
+
     onSuccess: () => {
+      setAuth({ isLoggedIn: false });
       toast.success("로그아웃 되었습니다.");
-      router.refresh(); // 새 쿠키 적용 위해 새로고침
       router.push("/login");
     },
+
     onError: (err) => {
       toast.error("로그아웃 실패", {
         description: err.message ?? "로그아웃 중 오류가 발생했습니다.",
