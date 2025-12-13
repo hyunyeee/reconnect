@@ -1,5 +1,5 @@
-import MatchRegisterForm from "@/components/form/MatchRegisterForm";
 import { BackHeader } from "@/components/layout/BackHeader";
+import MatchGate from "@/app/(match)/match/MatchGate";
 
 export default function MatchRegisterPage() {
   return (
@@ -8,7 +8,7 @@ export default function MatchRegisterPage() {
         // title="상대방 정보 등록하기"
         backHref="/home"
       />
-      <MatchRegisterForm />
+      <MatchGate />
     </div>
   );
 }
