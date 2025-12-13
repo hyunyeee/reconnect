@@ -6,11 +6,19 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
 
+import { useAtomValue } from "jotai";
+import { authAtom } from "@/atoms/auth";
+import { useLogout } from "@/hooks/query/useAuth";
+import { PopAnimatedText } from "@/styles/PopAnimatedText";
+
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
   const [descScope, animateDesc] = useAnimate();
   const [labelScope, animateLabel] = useAnimate();
   const [buttonsScope, animateButtons] = useAnimate();
+
+  const { isLoggedIn } = useAtomValue(authAtom);
+  const logout = useLogout();
 
   // 애니메이션 재생 순서 제어
   useEffect(() => {
@@ -64,15 +72,6 @@ export default function LandingClient() {
           ]}
         />
 
-        {/* <div
-          // 라벨 DOM 위치는 상단에 있지만 시퀀스상 3번째로 재생됨
-          ref={labelScope}
-          style={{ opacity: 0, transform: "translateY(20px)" }}
-          className="mb-2 flex items-center justify-center gap-1 text-sm font-semibold tracking-tight text-main-pink md:text-base"
-        >
-          놓치고 싶지 않은 단 하나의 인연
-        </div> */}
-
         <p
           ref={descScope}
           style={{ opacity: 0, transform: "translateY(20px)" }}
@@ -86,76 +85,30 @@ export default function LandingClient() {
           style={{ opacity: 0, transform: "translateY(20px)" }}
           className="mt-14 md:mt-18"
         >
-          <Link href="/login" passHref>
+          <Link href={isLoggedIn ? "/match" : "/login"} passHref>
             <Button
               className="group bg-main-pink h-10 w-full border-none text-white shadow-none transition duration-300 hover:bg-[#A41847] hover:text-white md:w-auto"
               variant="default"
             >
-              ✨ 재회 가능성 테스트 시작하기
+              {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 재회 가능성 테스트 시작하기"}
               <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
           </Link>
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                const ok = confirm("로그아웃 할까요?");
+                if (ok) {
+                  logout.mutate();
+                }
+              }}
+              className="mt-4 w-full text-center text-sm text-gray-400 underline underline-offset-4 hover:text-gray-600"
+            >
+              로그아웃
+            </button>
+          )}
         </div>
       </div>
     </main>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* ----------------------------- PopAnimatedText ------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-interface StyledRange {
-  target: string; // 강조할 글자 또는 단어(현재는 글자 단위 매칭)
-  className: string;
-}
-
-interface PopAnimatedTextProps {
-  texts: string[]; // 줄마다 배열로 전달 (줄바꿈 처리 용이)
-  className?: string;
-  charDelay?: number; // (참고) stagger 값은 부모에서 제어하므로 여기선 사용 X
-  styledRanges?: StyledRange[];
-  scope: React.RefObject<HTMLHeadingElement>; // useAnimate()에서 받은 scope를 전달
-}
-
-/**
- * PopAnimatedText
- * - 각 글자를 <span>으로 만들고 초기 스타일(숨김, 아래로 이동, blur) 적용
- * - 실제 애니메이션은 외부(부모)에서 useAnimate로 제어
- */
-function PopAnimatedText({
-  texts,
-  className = "",
-  styledRanges = [],
-  scope,
-}: PopAnimatedTextProps) {
-  const getCharClass = (char: string) => {
-    const match = styledRanges.find((s) => s.target === char);
-    return match ? match.className : "";
-  };
-
-  return (
-    // scope를 ref로 전달 (useAnimate에서 반환된 ref)
-    <h1 ref={scope} className={className}>
-      {texts.map((line, lineIndex) => (
-        <p key={lineIndex}>
-          {line.split("").map((char, i) => (
-            <span
-              key={i}
-              // 애니메이션은 부모가 담당하므로 여기선 초기 스타일만 지정
-              style={{
-                display: "inline-block",
-                opacity: 0,
-                transform: "translateY(30px)",
-                filter: "blur(4px)",
-              }}
-              className={getCharClass(char)}
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
-        </p>
-      ))}
-    </h1>
   );
 }
