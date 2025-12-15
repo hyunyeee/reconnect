@@ -5,6 +5,7 @@ import { useAnimate, stagger } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
+import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
@@ -55,6 +56,10 @@ export default function LandingClient() {
 
   return (
     <main className="relative flex min-h-screen max-w-md flex-col items-center justify-center overflow-hidden px-4 py-6">
+      <KakaoAdFit unit="DAN-aLlyYJ68qqHuPvdY" width={300} height={250} />
+      <KakaoAdFit unit="DAN-ZOGkyfi9vPA93ivl" width={300} height={250} />
+      <KakaoAdFit unit="DAN-wAz4OD2dxCo8DFqy" width={320} height={100} />
+
       <div className="w-full">
         <div className="relative mb-6 size-5">
           <Heart className="fill-main-pink text-main-pink absolute top-0 left-0 size-5" />
