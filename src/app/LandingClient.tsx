@@ -11,6 +11,7 @@ import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
 import { useLogout } from "@/hooks/query/useAuth";
 import { PopAnimatedText } from "@/styles/PopAnimatedText";
+import FloatingContactButton from "@/components/FloatingContactButton";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -61,9 +62,9 @@ export default function LandingClient() {
       <KakaoAdFit unit="DAN-wAz4OD2dxCo8DFqy" width={320} height={100} />
 
       <div className="w-full">
-        <div className="relative mb-6 size-5">
-          <Heart className="fill-main-pink text-main-pink absolute top-0 left-0 size-5" />
-          <Heart className="fill-main-pink text-main-pink/60 absolute top-0 left-0 size-5 animate-ping duration-1700" />
+        <div className="relative mb-6 size-6">
+          <Heart className="fill-main-pink text-main-pink absolute top-0 left-0 size-6" />
+          <Heart className="fill-main-pink text-main-pink/60 absolute top-0 left-0 size-6 animate-ping duration-1700" />
         </div>
 
         {/* --- PopAnimatedText: scope를 넘겨주기 */}
@@ -113,6 +114,7 @@ export default function LandingClient() {
             </button>
           )}
         </div>
+        <FloatingContactButton />
       </div>
     </main>
   );
