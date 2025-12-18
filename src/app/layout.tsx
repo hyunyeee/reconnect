@@ -10,6 +10,11 @@ import OverlayRenderer from "@/components/overlay/OverlayRenderer";
 export const metadata: Metadata = {
   title: "Re:connect",
   description: "재회",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
