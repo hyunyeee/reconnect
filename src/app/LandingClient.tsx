@@ -12,6 +12,7 @@ import { useLogout } from "@/hooks/query/useAuth";
 import { PopAnimatedText } from "@/styles/PopAnimatedText";
 import FloatingContactButton from "@/components/FloatingContactButton";
 import { useLandingAnimation } from "@/hooks/useLandingAnimation";
+import FloatingPrivacyButton from "@/components/FloatingPrivacyButton";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -57,9 +58,7 @@ export default function LandingClient() {
             style={{ opacity: 0, transform: "translateY(20px)" }}
             className="text-sm leading-relaxed text-gray-600 sm:text-base md:text-lg"
           >
-            가장 소중한 순간의 기억을
-            <br className="hidden sm:block" />
-            운명적인 재회로 이어드립니다.
+            가장 소중한 순간의 기억을 운명적인 재회로 이어드립니다.
           </p>
 
           {/* CTA 영역 */}
@@ -75,20 +74,12 @@ export default function LandingClient() {
               </Button>
             </Link>
 
-            {/* 보조 설명 링크 */}
-            <Link
-              href="/privacy-safe"
-              className="mt-4 block text-center text-[11px] text-gray-400 underline underline-offset-4 transition hover:text-gray-600 sm:text-xs"
-            >
-              개인정보 보호 및 매칭 방식 안내
-            </Link>
-
             {isLoggedIn && (
               <button
                 onClick={() => {
                   if (confirm("로그아웃 할까요?")) logout.mutate();
                 }}
-                className="w-full text-center text-xs text-gray-400 underline underline-offset-4 hover:text-gray-600"
+                className="mt-4 w-full text-center text-xs text-gray-400 underline underline-offset-4 hover:text-gray-600"
               >
                 로그아웃
               </button>
@@ -107,6 +98,7 @@ export default function LandingClient() {
       </div>
 
       {/* ================= 고정 문의 버튼 ================= */}
+      <FloatingPrivacyButton />
       <FloatingContactButton />
     </main>
   );
