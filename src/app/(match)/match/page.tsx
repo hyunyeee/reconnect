@@ -6,7 +6,7 @@ export default function MatchRegisterPage() {
     <div className="mx-auto w-full max-w-md px-4 py-6">
       <BackHeader
         // title="상대방 정보 등록하기"
-        backHref="/home"
+        backHref="/"
       />
       <MatchGate />
     </div>
