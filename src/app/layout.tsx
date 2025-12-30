@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { pretendard } from "@/styles/font";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -26,6 +27,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`${pretendard.className} h-full min-h-screen w-full overflow-auto text-black`}
       >
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FD8Q76DJ1N');
+          `}
+        </Script>
+
         <Providers isLoggedIn={isLoggedIn}>
           <QueryProvider>
             <main className="flex min-h-screen items-center justify-center">
