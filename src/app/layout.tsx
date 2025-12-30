@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import QueryProvider from "@/app/providers/QueryProvider";
 import { Providers } from "@/app/Providers";
 import OverlayRenderer from "@/components/overlay/OverlayRenderer";
+import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
 
 export const metadata: Metadata = {
   title: "Re:connect",
@@ -39,6 +40,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             gtag('config', 'G-FD8Q76DJ1N');
           `}
         </Script>
+
+        <GoogleAnalyticsPageView />
 
         <Providers isLoggedIn={isLoggedIn}>
           <QueryProvider>
