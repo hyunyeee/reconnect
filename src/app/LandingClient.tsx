@@ -13,6 +13,7 @@ import { PopAnimatedText } from "@/styles/PopAnimatedText";
 import FloatingContactButton from "@/components/FloatingContactButton";
 import { useLandingAnimation } from "@/hooks/useLandingAnimation";
 import FloatingPrivacyButton from "@/components/FloatingPrivacyButton";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -20,6 +21,7 @@ export default function LandingClient() {
   const [buttonsScope, animateButtons] = useAnimate();
 
   const { isLoggedIn } = useAtomValue(authAtom);
+  const queryClient = useQueryClient();
   const logout = useLogout();
 
   useLandingAnimation({
@@ -69,7 +71,7 @@ export default function LandingClient() {
           >
             <Link href={isLoggedIn ? "/match" : "/login"} passHref>
               <Button className="group bg-main-pink h-11 w-full text-sm font-medium text-white hover:bg-[#A41847] sm:text-base">
-                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 재회 가능성 테스트 시작하기"}
+                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 다시 만나고 싶어요"}
                 <ArrowRight className="ml-1 size-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -77,7 +79,10 @@ export default function LandingClient() {
             {isLoggedIn && (
               <button
                 onClick={() => {
-                  if (confirm("로그아웃 할까요?")) logout.mutate();
+                  if (confirm("로그아웃 할까요?")) {
+                    logout.mutate();
+                    queryClient.clear();
+                  }
                 }}
                 className="mt-4 w-full text-center text-xs text-gray-400 underline underline-offset-4 hover:text-gray-600"
               >

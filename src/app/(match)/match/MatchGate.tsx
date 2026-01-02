@@ -1,51 +1,65 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import MatchRegisterForm from "@/components/form/MatchRegisterForm";
 import { useMatchInfo } from "@/hooks/query/useMatch";
 
 export default function MatchGate() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const isEditMode = searchParams.get("mode") === "edit";
+
   const { data: infoRes, isLoading, isFetching, isError, error } = useMatchInfo();
 
   const ready = !isLoading && !isFetching;
 
   const noRequest = ready && infoRes?.success === false && infoRes?.code === "MATCH_002";
+
   const hasInfo = ready && infoRes?.success === true && !!infoRes.data;
 
   const matched = hasInfo ? infoRes!.data.matched : undefined;
 
   useEffect(() => {
     if (!ready) return;
-    if (isError) return; // 에러 아래 UI로 처리
+    if (isError) return;
 
-    if (noRequest) return; // 폼 렌더
+    // 아직 요청 없음 → 등록 폼
+    if (noRequest) return;
 
+    // 이미 요청했고 매칭 안 됨
     if (matched === false) {
+      if (isEditMode) return; // 수정은 유저 의도
       router.replace("/waiting");
       return;
     }
 
+    // 매칭 완료
     if (matched === true) {
       router.replace("/success");
     }
-  }, [ready, isError, noRequest, matched, router]);
+  }, [ready, isError, noRequest, matched, isEditMode, router]);
 
-  // ----- UI 렌더링 -----
+  // ---------------- UI ----------------
+
   if (!ready) {
     return (
       <p className="mt-10 text-center text-sm text-gray-500">매칭 정보를 불러오는 중이에요...</p>
     );
   }
 
-  // MATCH_002는 에러가 아니라 정상 플로우(등록 안 함)
+  // 최초 등록
   if (noRequest) {
-    return <MatchRegisterForm />;
+    return <MatchRegisterForm mode="create" />;
   }
 
-  // 네트워크/서버 error
+  // 수정
+  if (matched === false && isEditMode && infoRes?.data) {
+    return <MatchRegisterForm mode="edit" defaultValues={infoRes.data} />;
+  }
+
   if (isError && error?.code !== "MATCH_002") {
     return (
       <p className="mt-10 text-center text-sm text-red-600">
