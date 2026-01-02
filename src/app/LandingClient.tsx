@@ -69,7 +69,7 @@ export default function LandingClient() {
           >
             <Link href={isLoggedIn ? "/match" : "/login"} passHref>
               <Button className="group bg-main-pink h-11 w-full text-sm font-medium text-white hover:bg-[#A41847] sm:text-base">
-                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 재회 가능성 테스트 시작하기"}
+                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 다시 만나고 싶어요"}
                 <ArrowRight className="ml-1 size-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
