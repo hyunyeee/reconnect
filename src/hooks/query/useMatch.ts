@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -52,21 +52,41 @@ export interface MatchInfo {
 export const useMatchInfo = (enabled = true) => {
   return useQuery<ApiResponse<MatchInfo>, ApiError>({
     queryKey: ["match-info"],
-    queryFn: async () =>
-      await apiClient<ApiResponse<MatchInfo>>(API.MATCH.REQUEST, {
+    queryFn: () =>
+      apiClient<ApiResponse<MatchInfo>>(API.MATCH.REQUEST, {
         method: "GET",
       }),
 
     enabled,
 
-    staleTime: 0,
-    gcTime: 0,
+    staleTime: 1000 * 30, // 30초
+    gcTime: 1000 * 60 * 5, // 5분
 
-    refetchOnMount: true,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
 
     retry: false,
+  });
+};
+
+export const useMatchUpdate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<ApiResponse<void>, ApiError, MatchRequestPayload>({
+    mutationFn: async (payload) => {
+      return await apiClient<ApiResponse<void>>(API.MATCH.REQUEST, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+
+    onSuccess: () => {
+      // 수정 후 최신 정보 다시 기준으로 삼기
+      queryClient.invalidateQueries({
+        queryKey: ["match-info"],
+      });
+    },
   });
 };
 

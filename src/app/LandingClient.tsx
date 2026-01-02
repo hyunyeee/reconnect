@@ -13,6 +13,7 @@ import { PopAnimatedText } from "@/styles/PopAnimatedText";
 import FloatingContactButton from "@/components/FloatingContactButton";
 import { useLandingAnimation } from "@/hooks/useLandingAnimation";
 import FloatingPrivacyButton from "@/components/FloatingPrivacyButton";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -20,6 +21,7 @@ export default function LandingClient() {
   const [buttonsScope, animateButtons] = useAnimate();
 
   const { isLoggedIn } = useAtomValue(authAtom);
+  const queryClient = useQueryClient();
   const logout = useLogout();
 
   useLandingAnimation({
@@ -77,7 +79,10 @@ export default function LandingClient() {
             {isLoggedIn && (
               <button
                 onClick={() => {
-                  if (confirm("로그아웃 할까요?")) logout.mutate();
+                  if (confirm("로그아웃 할까요?")) {
+                    logout.mutate();
+                    queryClient.clear();
+                  }
                 }}
                 className="mt-4 w-full text-center text-xs text-gray-400 underline underline-offset-4 hover:text-gray-600"
               >
