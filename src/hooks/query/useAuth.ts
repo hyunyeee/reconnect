@@ -61,7 +61,7 @@ export const useLogin = () => {
         description: "반가워요!",
       });
 
-      router.push("/match");
+      router.push("/");
     },
 
     onError: (err) => {

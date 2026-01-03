@@ -4,7 +4,6 @@ import { useAnimate } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
-import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
@@ -75,6 +74,17 @@ export default function LandingClient() {
                 <ArrowRight className="ml-1 size-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+            <Link
+              href={isLoggedIn ? "/attachment-test" : "/login?redirect=/attachment-test"}
+              passHref
+            >
+              <Button
+                variant="outline"
+                className="mt-2 h-11 w-full border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:text-base"
+              >
+                💭 내 애착 유형 알아보기
+              </Button>
+            </Link>
 
             {isLoggedIn && (
               <button
@@ -90,15 +100,6 @@ export default function LandingClient() {
               </button>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* ================= 광고 영역 ================= */}
-      <div className="mt-14 w-full border-t border-gray-100 pt-6">
-        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
-          <KakaoAdFit unit="DAN-aLlyYJ68qqHuPvdY" width={300} height={250} />
-          <KakaoAdFit unit="DAN-ZOGkyfi9vPA93ivl" width={300} height={250} />
-          <KakaoAdFit unit="DAN-wAz4OD2dxCo8DFqy" width={320} height={100} />
         </div>
       </div>
 

@@ -18,4 +18,9 @@ export const API = {
     REQUEST: "/matches/request",
     RESULT: "/matches/result",
   },
+  ATTACHMENT: {
+    QUESTIONS: "/attachment-test/questions",
+    SUBMIT: "/attachment-test/submit",
+    RESULT: "/attachment-test/result",
+  },
 } as const;
