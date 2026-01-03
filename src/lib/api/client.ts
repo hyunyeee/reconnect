@@ -1,7 +1,5 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 export async function apiClient<T>(path: string, options?: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}${path}`;
 
   const res = await fetch(url, {
     headers: {
@@ -14,8 +12,19 @@ export async function apiClient<T>(path: string, options?: RequestInit): Promise
 
   const data = await res.json().catch(() => ({}));
 
+  // 인증 만료
+  if (res.status === 401 && (data.code === "T001" || data.code === "T002")) {
+    throw {
+      type: "AUTH_EXPIRED",
+      code: data.code,
+      message: data.message ?? "로그인이 만료되었습니다.",
+      status: 401,
+    };
+  }
+
   if (!res.ok) {
     throw {
+      type: "API_ERROR",
       code: data.code || "NETWORK_ERROR",
       message: data.message || "서버와 통신할 수 없습니다.",
       status: res.status,

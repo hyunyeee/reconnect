@@ -1,22 +1,51 @@
 "use client";
 
-import { ReactNode } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode, useRef } from "react";
+import { QueryClient, QueryClientProvider, QueryCache } from "@tanstack/react-query";
+import { isAuthExpiredError } from "@/lib/api/isAuthExpiredError";
+import { canHandleAuthExpire } from "@/lib/api/authExpireGuard";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function QueryProvider({ children }: Props) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 1,
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 30,
-      },
-    },
-  });
+  const queryClientRef = useRef<QueryClient | null>(null);
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  if (!queryClientRef.current) {
+    const queryClient = new QueryClient({
+      queryCache: new QueryCache({
+        onError: (error) => {
+          if (!isAuthExpiredError(error)) return;
+
+          // 이미 처리 중이면 무시
+          if (!canHandleAuthExpire()) return;
+
+          const ok = window.confirm("로그인이 만료되었습니다.\n다시 로그인하시겠어요?");
+
+          if (!ok) return;
+
+          // 모든 쿼리 중단 + 제거
+          queryClient.cancelQueries();
+          queryClient.clear();
+
+          window.location.replace("/login");
+        },
+      }),
+      defaultOptions: {
+        queries: {
+          retry: 1,
+          refetchOnWindowFocus: false,
+          staleTime: 1000 * 30,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+
+    queryClientRef.current = queryClient;
+  }
+
+  return <QueryClientProvider client={queryClientRef.current}>{children}</QueryClientProvider>;
 }
