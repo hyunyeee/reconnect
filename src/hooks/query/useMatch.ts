@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -59,10 +59,10 @@ export const useMatchInfo = (enabled = true) => {
 
     enabled,
 
-    staleTime: 1000 * 30, // 30초
-    gcTime: 1000 * 60 * 5, // 5분
+    staleTime: 0,
+    gcTime: 0,
 
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
 
@@ -71,8 +71,6 @@ export const useMatchInfo = (enabled = true) => {
 };
 
 export const useMatchUpdate = () => {
-  const queryClient = useQueryClient();
-
   return useMutation<ApiResponse<void>, ApiError, MatchRequestPayload>({
     mutationFn: async (payload) => {
       return await apiClient<ApiResponse<void>>(API.MATCH.REQUEST, {
@@ -82,9 +80,12 @@ export const useMatchUpdate = () => {
     },
 
     onSuccess: () => {
-      // 수정 후 최신 정보 다시 기준으로 삼기
-      queryClient.invalidateQueries({
-        queryKey: ["match-info"],
+      toast.success("매칭 정보가 수정되었습니다.");
+    },
+
+    onError: (err) => {
+      toast.error("매칭 정보 수정 실패", {
+        description: err.message ?? "요청 중 오류가 발생했습니다.",
       });
     },
   });
@@ -93,8 +94,8 @@ export const useMatchUpdate = () => {
 export const useMatchResult = () => {
   return useQuery<ApiResponse<string>, ApiError>({
     queryKey: ["match-result"],
-    queryFn: async () =>
-      await apiClient<ApiResponse<string>>(API.MATCH.RESULT, {
+    queryFn: () =>
+      apiClient<ApiResponse<string>>(API.MATCH.RESULT, {
         method: "GET",
       }),
 
