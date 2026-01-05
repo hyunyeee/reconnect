@@ -4,7 +4,6 @@ import { useAnimate } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
-import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
@@ -13,6 +12,7 @@ import { PopAnimatedText } from "@/styles/PopAnimatedText";
 import FloatingContactButton from "@/components/FloatingContactButton";
 import { useLandingAnimation } from "@/hooks/useLandingAnimation";
 import FloatingPrivacyButton from "@/components/FloatingPrivacyButton";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -20,6 +20,7 @@ export default function LandingClient() {
   const [buttonsScope, animateButtons] = useAnimate();
 
   const { isLoggedIn } = useAtomValue(authAtom);
+  const queryClient = useQueryClient();
   const logout = useLogout();
 
   useLandingAnimation({
@@ -69,15 +70,29 @@ export default function LandingClient() {
           >
             <Link href={isLoggedIn ? "/match" : "/login"} passHref>
               <Button className="group bg-main-pink h-11 w-full text-sm font-medium text-white hover:bg-[#A41847] sm:text-base">
-                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 재회 가능성 테스트 시작하기"}
+                {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 다시 만나고 싶어요"}
                 <ArrowRight className="ml-1 size-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Link
+              href={isLoggedIn ? "/attachment-test" : "/login?redirect=/attachment-test"}
+              passHref
+            >
+              <Button
+                variant="outline"
+                className="mt-2 h-11 w-full border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:text-base"
+              >
+                💭 내 애착 유형 알아보기
               </Button>
             </Link>
 
             {isLoggedIn && (
               <button
                 onClick={() => {
-                  if (confirm("로그아웃 할까요?")) logout.mutate();
+                  if (confirm("로그아웃 할까요?")) {
+                    logout.mutate();
+                    queryClient.clear();
+                  }
                 }}
                 className="mt-4 w-full text-center text-xs text-gray-400 underline underline-offset-4 hover:text-gray-600"
               >
@@ -85,15 +100,6 @@ export default function LandingClient() {
               </button>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* ================= 광고 영역 ================= */}
-      <div className="mt-14 w-full border-t border-gray-100 pt-6">
-        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
-          <KakaoAdFit unit="DAN-aLlyYJ68qqHuPvdY" width={300} height={250} />
-          <KakaoAdFit unit="DAN-ZOGkyfi9vPA93ivl" width={300} height={250} />
-          <KakaoAdFit unit="DAN-wAz4OD2dxCo8DFqy" width={320} height={100} />
         </div>
       </div>
 

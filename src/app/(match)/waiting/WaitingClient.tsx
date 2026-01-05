@@ -5,9 +5,11 @@ import { HeartHandshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useMatchInfo } from "@/hooks/query/useMatch";
+import { useRouter } from "next/navigation";
 
 export default function WaitingClient() {
   const { data: infoRes, isLoading, isError } = useMatchInfo();
+  const router = useRouter();
 
   if (isLoading) {
     return <p className="mt-10 text-center text-gray-500">정보를 불러오는 중입니다...</p>;
@@ -89,8 +91,12 @@ export default function WaitingClient() {
         </div>
 
         <div className="mt-6 text-right">
-          <Button variant="ghost" className="text-main-pink hover:bg-pink-50" disabled>
-            수정 기능 준비중
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/match?mode=edit")}
+            className="mt-2 ml-auto rounded-md px-3 py-1 text-sm font-medium text-gray-500 transition hover:bg-gray-100 hover:text-gray-800"
+          >
+            정보 수정하기
           </Button>
         </div>
       </motion.div>

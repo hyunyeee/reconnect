@@ -25,7 +25,6 @@ export const useMatchRequest = () => {
         body: JSON.stringify(payload),
       });
     },
-
     onSuccess: (res) => {
       toast.success("매칭 요청 완료", {
         description: res.data?.message ?? "성공적으로 요청되었습니다.",
@@ -33,7 +32,6 @@ export const useMatchRequest = () => {
 
       router.push("/");
     },
-
     onError: (err) => {
       toast.error("매칭 요청 실패", {
         description: err.message ?? "요청 중 오류가 발생했습니다.",
