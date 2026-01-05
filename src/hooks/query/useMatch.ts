@@ -25,6 +25,7 @@ export const useMatchRequest = () => {
         body: JSON.stringify(payload),
       });
     },
+
     onSuccess: (res) => {
       toast.success("매칭 요청 완료", {
         description: res.data?.message ?? "성공적으로 요청되었습니다.",
@@ -32,6 +33,7 @@ export const useMatchRequest = () => {
 
       router.push("/");
     },
+
     onError: (err) => {
       toast.error("매칭 요청 실패", {
         description: err.message ?? "요청 중 오류가 발생했습니다.",
@@ -52,8 +54,8 @@ export interface MatchInfo {
 export const useMatchInfo = (enabled = true) => {
   return useQuery<ApiResponse<MatchInfo>, ApiError>({
     queryKey: ["match-info"],
-    queryFn: async () =>
-      await apiClient<ApiResponse<MatchInfo>>(API.MATCH.REQUEST, {
+    queryFn: () =>
+      apiClient<ApiResponse<MatchInfo>>(API.MATCH.REQUEST, {
         method: "GET",
       }),
 
@@ -70,11 +72,32 @@ export const useMatchInfo = (enabled = true) => {
   });
 };
 
+export const useMatchUpdate = () => {
+  return useMutation<ApiResponse<void>, ApiError, MatchRequestPayload>({
+    mutationFn: async (payload) => {
+      return await apiClient<ApiResponse<void>>(API.MATCH.REQUEST, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+
+    onSuccess: () => {
+      toast.success("매칭 정보가 수정되었습니다.");
+    },
+
+    onError: (err) => {
+      toast.error("매칭 정보 수정 실패", {
+        description: err.message ?? "요청 중 오류가 발생했습니다.",
+      });
+    },
+  });
+};
+
 export const useMatchResult = () => {
   return useQuery<ApiResponse<string>, ApiError>({
     queryKey: ["match-result"],
-    queryFn: async () =>
-      await apiClient<ApiResponse<string>>(API.MATCH.RESULT, {
+    queryFn: () =>
+      apiClient<ApiResponse<string>>(API.MATCH.RESULT, {
         method: "GET",
       }),
 
