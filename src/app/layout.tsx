@@ -12,7 +12,7 @@ import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 export const metadata: Metadata = {
   title: "Re:connect",
-  description: "재회",
+  description: "재회를 원하는 사람들을 위한 서비스. 다시 만나고 싶은 사람이 있나요?",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
