@@ -7,12 +7,11 @@ import { ArrowRight, Heart } from "lucide-react";
 
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
-import { useLogout } from "@/hooks/query/useAuth";
-import { PopAnimatedText } from "@/styles/PopAnimatedText";
-import FloatingContactButton from "@/components/FloatingContactButton";
-import { useLandingAnimation } from "@/hooks/useLandingAnimation";
-import FloatingPrivacyButton from "@/components/FloatingPrivacyButton";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLogout } from "@/hooks/query/useAuth";
+import { useLandingAnimation } from "@/hooks/useLandingAnimation";
+import FloatingButtons from "@/components/layout/FloatingButtons/FloatingButtons";
+import { PopAnimatedText } from "@/styles/PopAnimatedText";
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
@@ -85,6 +84,15 @@ export default function LandingClient() {
                 💭 내 애착 유형 알아보기
               </Button>
             </Link>
+            {/* 커뮤니티 버튼 추가 */}
+            <Link href="/posts" passHref>
+              <Button
+                variant="outline"
+                className="border-main-pink/20 bg-main-pink/5 hover:bg-main-pink/10 mt-2 h-11 w-full text-sm font-medium text-gray-800 sm:text-base"
+              >
+                👥 커뮤니티 이야기 보기
+              </Button>
+            </Link>
 
             {isLoggedIn && (
               <button
@@ -104,8 +112,7 @@ export default function LandingClient() {
       </div>
 
       {/* ================= 고정 문의 버튼 ================= */}
-      <FloatingPrivacyButton />
-      <FloatingContactButton />
+      <FloatingButtons />
     </main>
   );
 }
