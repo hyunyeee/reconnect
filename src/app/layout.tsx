@@ -21,21 +21,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="ko" className={pretendard.variable}>
-      <body className={`${pretendard.className} min-h-screen w-full bg-white text-black`}>
-        {/* ================= GA ================= */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N"
-          strategy="afterInteractive"
+      <head>
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7293517480091822"
+          crossOrigin="anonymous"
         />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-FD8Q76DJ1N');
-          `}
-        </Script>
 
+        {/* GA */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-FD8Q76DJ1N');
+            `,
+          }}
+        />
+      </head>
+
+      <body className={`${pretendard.className} min-h-screen w-full bg-white text-black`}>
         <GoogleAnalyticsPageView />
 
         <Providers isLoggedIn={isLoggedIn}>
@@ -43,10 +51,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div id="portal" />
             <OverlayRenderer />
 
-            {/* ================= 페이지 영역 ================= */}
             <main className="mx-auto w-full max-w-md px-4 pt-6">{children}</main>
 
-            {/* ================= 광고 영역 ================= */}
             <footer className="mt-16 border-t border-gray-100 py-8">
               <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4">
                 <KakaoAdFit unit="DAN-aLlyYJ68qqHuPvdY" width={300} height={250} />
@@ -54,6 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <KakaoAdFit unit="DAN-wAz4OD2dxCo8DFqy" width={320} height={100} />
               </div>
             </footer>
+
             <Toaster position="top-center" richColors closeButton />
           </QueryProvider>
         </Providers>
