@@ -23,4 +23,10 @@ export const API = {
     SUBMIT: "/attachment-test/submit",
     RESULT: "/attachment-test/result",
   },
+  COMMUNITY: {
+    POSTS: "/posts",
+    POSTS_PAGED: "/posts/paged",
+    COMMENTS_PAGED: (postId: number) => `/comments/post/${postId}/paged`,
+    COMMENTS: "/comments",
+  },
 } as const;

@@ -101,7 +101,7 @@ export default function MatchedClient() {
             <InfoRow label="이름" value={info.targetName} />
             <InfoRow label="전화번호" value={info.targetPhone} />
             <InfoRow label="인스타그램" value={`@${info.targetInsta}`} />
-            <InfoRow label="재회 의지" value={`${info.requesterDesire} / 100`} />
+            <InfoRow label="나의 재회 의지" value={`${info.requesterDesire} / 100`} />
           </CardContent>
         </Card>
 
