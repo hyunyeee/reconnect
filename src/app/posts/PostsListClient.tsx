@@ -8,7 +8,7 @@ import { usePostPaged } from "@/hooks/query/usePost";
 import { PinnedNotice } from "@/components/post/PinnedNotice";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 export default function PostsListClient() {
   const router = useRouter();
