@@ -17,7 +17,7 @@ export async function apiClient<T>(path: string, options?: RequestInit): Promise
     throw {
       type: "AUTH_EXPIRED",
       code: data.code,
-      message: data.message ?? "로그인이 만료되었습니다.",
+      message: data.message ?? "로그인이 필요합니다.",
       status: 401,
     };
   }

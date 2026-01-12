@@ -21,7 +21,7 @@ export default function QueryProvider({ children }: Props) {
           // 이미 처리 중이면 무시
           if (!canHandleAuthExpire()) return;
 
-          const ok = window.confirm("로그인이 만료되었습니다.\n다시 로그인하시겠어요?");
+          const ok = window.confirm("로그인이 필요합니다.");
 
           if (!ok) return;
 
