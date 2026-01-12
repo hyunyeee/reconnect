@@ -35,11 +35,14 @@ export const usePostPaged = ({ page, size }: PostPagedParams, enabled = true) =>
       ),
 
     enabled,
+
     staleTime: 1000 * 30,
     gcTime: 1000 * 60 * 5,
-    refetchOnMount: false,
+
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+
     retry: false,
   });
 };
