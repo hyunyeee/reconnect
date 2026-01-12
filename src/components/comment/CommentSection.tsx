@@ -34,7 +34,8 @@ export default function CommentSection({ postId }: Props) {
     if (!firstLoad.comments.length) return;
     if (currentPage !== null) return;
 
-    setComments(firstLoad.comments);
+    setComments([...firstLoad.comments].reverse());
+
     setCurrentPage(firstLoad.currentPage);
     setTotalPages(firstLoad.totalPages);
     setTotalCount(firstLoad.totalCount);
@@ -52,7 +53,8 @@ export default function CommentSection({ postId }: Props) {
   const handleLoadPrev = () => {
     if (!prevCommentsQuery.data || nextPage === null) return;
 
-    const newComments = prevCommentsQuery.data.data.content;
+    const newComments = [...prevCommentsQuery.data.data.content].reverse();
+
     setComments((prev) => [...newComments, ...prev]);
     setCurrentPage(nextPage);
   };
@@ -76,9 +78,7 @@ export default function CommentSection({ postId }: Props) {
   const handleDelete = (commentId: number) => {
     setComments((prev) =>
       prev
-        // 부모 댓글 삭제
         .filter((c) => c.commentId !== commentId)
-        // 대댓글 삭제
         .map((c) => ({
           ...c,
           children: c.children?.filter((child) => child.commentId !== commentId) ?? [],
