@@ -10,9 +10,18 @@ import type { Comment } from "@/types/community";
 //  공통 응답 타입
 interface CommentPagedResponse {
   content: Comment[];
+
+  // pagination
   totalPages: number;
-  totalElements: number;
-  number: number; // current page
+  pageNumber: number;
+  pageSize: number;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+
+  // count
+  totalCount: number;
 }
 
 /* =========================
@@ -50,13 +59,18 @@ export const useCommentsFirstLoad = ({
     retry: false,
   });
 
+  const data = query.data?.data;
+
   return {
     isLoading: query.isLoading,
     isError: query.isError,
-    comments: query.data?.data.content ?? [],
-    currentPage: query.data?.data.number ?? 0,
-    totalPages: query.data?.data.totalPages ?? 0,
-    totalElements: query.data?.data.totalElements ?? 0,
+
+    comments: data?.content ?? [],
+
+    currentPage: data?.pageNumber ?? 0,
+    totalPages: data?.totalPages ?? 0,
+
+    totalCount: data?.totalCount ?? 0,
   };
 };
 

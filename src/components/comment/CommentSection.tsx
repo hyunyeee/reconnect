@@ -37,7 +37,7 @@ export default function CommentSection({ postId }: Props) {
     setComments(firstLoad.comments);
     setCurrentPage(firstLoad.currentPage);
     setTotalPages(firstLoad.totalPages);
-    setTotalCount(firstLoad.totalElements);
+    setTotalCount(firstLoad.totalCount);
   }, [firstLoad, currentPage]);
 
   const nextPage = currentPage !== null && currentPage + 1 < totalPages ? currentPage + 1 : null;
