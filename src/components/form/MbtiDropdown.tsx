@@ -19,7 +19,6 @@ interface MbtiDropdownProps {
   name?: string;
   label?: string;
   placeholder?: string;
-  defaultValue?: MbtiValue;
   disabled?: boolean;
   className?: string;
 }
@@ -28,7 +27,6 @@ export default function MbtiDropdown({
   name = "mbti",
   label = "MBTI",
   placeholder = "MBTI를 선택하세요",
-  defaultValue = "ISTP",
   disabled = false,
   className = "",
 }: MbtiDropdownProps) {
@@ -42,11 +40,11 @@ export default function MbtiDropdown({
       </Label>
 
       <Controller
-        control={control}
         name={name}
-        defaultValue={defaultValue}
+        control={control}
         render={({ field }) => (
           <Select
+            key={field.value ?? "empty"}
             value={field.value}
             onValueChange={(v) => field.onChange(v as MbtiValue)}
             disabled={disabled}
@@ -76,7 +74,7 @@ export default function MbtiDropdown({
         )}
       />
 
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 }
