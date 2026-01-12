@@ -22,6 +22,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ko" className={pretendard.variable}>
       <body className={`${pretendard.className} min-h-screen w-full bg-white text-black`}>
+        {/* ================= Google AdSense ================= */}
+        <Script
+          async
+          strategy="beforeInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7293517480091822"
+          crossOrigin="anonymous"
+        />
         {/* ================= GA ================= */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N"
