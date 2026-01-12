@@ -52,6 +52,20 @@ export default function MatchRegisterForm({ mode, defaultValues }: Props) {
         <h1 className="text-center text-2xl font-bold">
           {mode === "edit" ? "정보 수정" : "다시 만나고 싶은 사람"}
         </h1>
+        <div className="border-main-pink/40 bg-main-pink/5 rounded-lg border px-4 py-3 text-sm text-gray-700">
+          <p className="text-main-pink font-semibold">
+            ⚠️ 입력 정보는 반드시 정확하게 작성해 주세요
+          </p>
+          <p className="mt-1 leading-relaxed">
+            이름 · 전화번호 · 인스타그램 ID는
+            <br />
+            <span className="text-main-pink font-bold">
+              상대방이 입력한 정보와 단 한 글자라도 다르면 매칭되지 않습니다.
+            </span>
+            <br />
+            오타 없이, 실제 사용하는 정보 그대로 입력해 주세요.
+          </p>
+        </div>
 
         <section className="flex flex-col space-y-5">
           <NormalInput name="targetName" label="이름" placeholder="상대방 이름" />

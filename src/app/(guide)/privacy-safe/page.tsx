@@ -2,6 +2,7 @@
 
 import { ShieldCheck, User, Heart } from "lucide-react";
 import { BackHeader } from "@/components/layout/BackHeader";
+import Link from "next/link";
 
 export default function PrivacySafePage() {
   return (
@@ -142,6 +143,21 @@ export default function PrivacySafePage() {
             <br />
             <strong>익명성과 안전을 최우선</strong>으로 설계되었습니다.
           </p>
+        </section>
+        {/* ================= 안내 CTA ================= */}
+        <section className="bg-main-pink/5 mt-10 rounded-xl p-5 text-sm">
+          <p className="font-semibold text-gray-900">이 서비스는 어떻게 매칭되나요?</p>
+          <p className="mt-2 text-gray-700">
+            재회 매칭이 어떤 흐름으로 이루어지는지,
+            <br />
+            언제 알림이 전송되는지 궁금하다면
+          </p>
+          <Link
+            href="/service-guide"
+            className="bg-main-pink mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#A41847]"
+          >
+            서비스 안내 보러가기 →
+          </Link>
         </section>
       </div>
     </main>
