@@ -103,6 +103,7 @@ export const useMemberProfile = () => {
 };
 
 export const useUpdateMemberProfile = () => {
+  const router = useRouter();
   return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdateForm>({
     mutationFn: async (payload) => {
       return await apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
@@ -112,6 +113,7 @@ export const useUpdateMemberProfile = () => {
     },
     onSuccess: () => {
       toast.success("내 정보가 수정되었습니다.");
+      router.push("/");
     },
     onError: (err) => {
       toast.error("수정 실패", {
