@@ -11,7 +11,7 @@ import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageV
 import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 export const metadata: Metadata = {
-  title: "Re:connect",
+  title: "LoveReconnect",
   description: "재회를 원하는 사람들을 위한 서비스. 다시 만나고 싶은 사람이 있나요?",
 };
 
