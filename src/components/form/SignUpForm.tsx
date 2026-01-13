@@ -64,7 +64,7 @@ export default function SignUpForm() {
         <section className="flex flex-col space-y-5">
           <NormalInput name="instagramId" label="인스타그램 ID" placeholder="instagramId" />
           <GenderSelect name="gender" label="성별" />
-          <MbtiDropdown name="mbti" defaultValue="ISTP" />
+          <MbtiDropdown name="mbti" />
 
           {/* 생년월일 DatePicker */}
           <DatePickerInput

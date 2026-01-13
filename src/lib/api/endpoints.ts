@@ -13,6 +13,8 @@ export const API = {
     SIGNUP: "/normalMembers",
     LOGIN: "/login",
     LOGOUT: "/logout",
+    PROFILE: "/profile/me",
+    RESET_PASSWORD: "/auth/reset-password",
   },
   MATCH: {
     REQUEST: "/matches/request",
