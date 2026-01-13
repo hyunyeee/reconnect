@@ -120,3 +120,31 @@ export const useUpdateMemberProfile = () => {
     },
   });
 };
+
+export const useResetPassword = () => {
+  return useMutation<
+    ApiResponse<null>,
+    ApiError,
+    {
+      phoneNumber: string;
+      newPassword: string;
+    }
+  >({
+    mutationFn: async (payload) => {
+      return await apiClient<ApiResponse<null>>(API.MEMBER.RESET_PASSWORD, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: () => {
+      toast.success("비밀번호 변경 완료", {
+        description: "새 비밀번호로 로그인해주세요.",
+      });
+    },
+    onError: (err) => {
+      toast.error("비밀번호 변경 실패", {
+        description: err.message ?? "처리 중 오류가 발생했습니다.",
+      });
+    },
+  });
+};
