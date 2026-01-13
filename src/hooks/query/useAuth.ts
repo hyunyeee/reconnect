@@ -1,8 +1,9 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useSetAtom } from "jotai";
 
 import type { ApiError, ApiResponse } from "@/types/api";
 import { apiClient } from "@/lib/api/client";
@@ -12,14 +13,16 @@ import type { LoginFormData, MemberFormData } from "@/schemas/memberSchema";
 import type { MemberProfileResponse, MemberProfileUpdateForm } from "@/types/member";
 
 import { authAtom } from "@/atoms/auth";
-import { useSetAtom } from "jotai";
 
+/* =========================
+ * 회원가입
+ * ========================= */
 export const useSignup = () => {
   const router = useRouter();
 
   return useMutation<ApiResponse<null>, ApiError, MemberFormData>({
     mutationFn: async (payload) => {
-      return await apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
         method: "POST",
         body: JSON.stringify(payload),
       });
@@ -38,20 +41,21 @@ export const useSignup = () => {
   });
 };
 
+/* =========================
+ * 로그인
+ * ========================= */
 export const useLogin = () => {
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, LoginFormData>({
     mutationFn: async (payload) => {
-      const serverPayload = {
-        memberEmail: payload.email,
-        memberPassword: payload.password,
-      };
-
-      return await apiClient<ApiResponse<null>>(API.MEMBER.LOGIN, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.LOGIN, {
         method: "POST",
-        body: JSON.stringify(serverPayload),
+        body: JSON.stringify({
+          memberEmail: payload.email,
+          memberPassword: payload.password,
+        }),
       });
     },
     onSuccess: () => {
@@ -67,13 +71,16 @@ export const useLogin = () => {
   });
 };
 
+/* =========================
+ * 로그아웃
+ * ========================= */
 export const useLogout = () => {
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, void>({
     mutationFn: async () => {
-      return await apiClient<ApiResponse<null>>(API.MEMBER.LOGOUT, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.LOGOUT, {
         method: "POST",
       });
     },
@@ -90,28 +97,43 @@ export const useLogout = () => {
   });
 };
 
+/* =========================
+ * 내 정보 조회 (캐시 완전 차단)
+ * ========================= */
 export const useMemberProfile = () => {
   return useQuery<ApiResponse<MemberProfileResponse>, ApiError, MemberProfileResponse>({
     queryKey: ["memberProfile"],
     queryFn: async () => {
-      return await apiClient<ApiResponse<MemberProfileResponse>>(API.MEMBER.PROFILE, {
-        method: "GET",
-      });
+      return apiClient<ApiResponse<MemberProfileResponse>>(API.MEMBER.PROFILE, { method: "GET" });
     },
     select: (res) => res.data,
+
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 };
 
+/* =========================
+ * 내 정보 수정
+ * ========================= */
 export const useUpdateMemberProfile = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdateForm>({
     mutationFn: async (payload) => {
-      return await apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["memberProfile"],
+      });
+
       toast.success("내 정보가 수정되었습니다.");
       router.push("/");
     },
@@ -123,8 +145,12 @@ export const useUpdateMemberProfile = () => {
   });
 };
 
+/* =========================
+ * 비밀번호 재설정
+ * ========================= */
 export const useResetPassword = () => {
   const router = useRouter();
+
   return useMutation<
     ApiResponse<null>,
     ApiError,
@@ -134,16 +160,16 @@ export const useResetPassword = () => {
     }
   >({
     mutationFn: async (payload) => {
-      return await apiClient<ApiResponse<null>>(API.MEMBER.RESET_PASSWORD, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.RESET_PASSWORD, {
         method: "POST",
         body: JSON.stringify(payload),
       });
     },
     onSuccess: () => {
-      router.push("/login");
       toast.success("비밀번호 변경 완료", {
         description: "새 비밀번호로 로그인해주세요.",
       });
+      router.push("/login");
     },
     onError: (err) => {
       toast.error("비밀번호 변경 실패", {
