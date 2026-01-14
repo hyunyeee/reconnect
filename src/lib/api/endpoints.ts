@@ -14,7 +14,7 @@ export const API = {
     LOGIN: "/login",
     LOGOUT: "/logout",
     PROFILE: "/profile/me",
-    RESET_PASSWORD: "/auth/reset-password",
+    RESET_PASSWORD: "/reset-password",
   },
   MATCH: {
     REQUEST: "/matches/request",

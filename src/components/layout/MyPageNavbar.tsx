@@ -57,16 +57,16 @@ export function MyPageNavbar() {
             내 정보 수정
           </Link>
 
-          {/*<Link*/}
-          {/*  href="/mypage/password"*/}
-          {/*  onClick={(e) => {*/}
-          {/*    e.stopPropagation();*/}
-          {/*    setOpen(false);*/}
-          {/*  }}*/}
-          {/*  className="block px-4 py-3 text-sm text-gray-800 hover:bg-neutral-100"*/}
-          {/*>*/}
-          {/*  비밀번호 변경*/}
-          {/*</Link>*/}
+          <Link
+            href="/mypage/password"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+            }}
+            className="block px-4 py-3 text-sm text-gray-800 hover:bg-neutral-100"
+          >
+            비밀번호 재설정
+          </Link>
 
           <button
             type="button"

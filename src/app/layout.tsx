@@ -1,18 +1,23 @@
-import type { Metadata } from "next";
-import Script from "next/script";
+import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { pretendard } from "@/styles/font";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { cookies } from "next/headers";
 import QueryProvider from "@/app/providers/QueryProvider";
 import { Providers } from "@/app/Providers";
 import OverlayRenderer from "@/components/overlay/OverlayRenderer";
 import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
-import { KakaoAdFit } from "@/components/KaKaoAdFit";
 
 export const metadata: Metadata = {
   title: "LoveReconnect",
   description: "재회를 원하는 사람들을 위한 서비스. 다시 만나고 싶은 사람이 있나요?",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -50,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div id="portal" />
             <OverlayRenderer />
 
+            {/* 메인 컨텐츠 */}
             <main className="mx-auto w-full max-w-md px-4 pt-6">{children}</main>
 
             {/*<footer className="mt-16 border-t border-gray-100 py-8">*/}
