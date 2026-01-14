@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { pretendard } from "@/styles/font";
 import "./globals.css";
@@ -7,17 +7,17 @@ import QueryProvider from "@/app/providers/QueryProvider";
 import { Providers } from "@/app/Providers";
 import OverlayRenderer from "@/components/overlay/OverlayRenderer";
 import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
-import { isTossMiniApp } from "@/lib/isTossMiniApp";
 
 export const metadata: Metadata = {
   title: "LoveReconnect",
   description: "재회를 원하는 사람들을 위한 서비스. 다시 만나고 싶은 사람이 있나요?",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -27,28 +27,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ko" className={pretendard.variable}>
       <head>
-        {!isTossMiniApp() && (
-          <>
-            {/* Google AdSense */}
-            <script
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9257573330331971"
-            />
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9257573330331971"
+        />
 
-            {/* GA */}
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N" />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
+        {/* GA */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD8Q76DJ1N" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-FD8Q76DJ1N');
             `,
-              }}
-            />
-          </>
-        )}
+          }}
+        />
       </head>
 
       <body className={`${pretendard.className} min-h-screen w-full bg-white text-black`}>
