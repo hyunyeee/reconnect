@@ -2,7 +2,7 @@ export const TermsContent = () => {
   return (
     <div className="space-y-6 text-left text-[14px] leading-relaxed text-gray-700">
       <p className="text-gray-600">
-        Love Re:connect(이하 “회사”)는 개인정보보호법 등 관련 법령을 준수하며, 회원님의 개인정보를
+        Love ReConnect(이하 “회사”)는 개인정보보호법 등 관련 법령을 준수하며, 회원님의 개인정보를
         안전하게 관리합니다. 본 동의서는 회원가입 및 재회 매칭 서비스 제공을 위해 필요한 최소한의
         개인정보 수집·이용에 대한 안내입니다.
       </p>
