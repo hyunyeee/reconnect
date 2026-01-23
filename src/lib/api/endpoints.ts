@@ -17,8 +17,8 @@ export const API = {
     RESET_PASSWORD: "/reset-password",
   },
   MATCH: {
-    REQUEST: "/matches/request",
-    RESULT: "/matches/result",
+    REQUEST: "/matches/instagram/request",
+    RESULT: "/matches/instagram/result",
   },
   ATTACHMENT: {
     QUESTIONS: "/attachment-test/questions",

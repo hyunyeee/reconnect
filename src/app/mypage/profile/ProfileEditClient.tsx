@@ -21,12 +21,18 @@ export default function ProfileEditClient() {
     defaultValues: {
       nickname: "",
       instagramId: "",
+      tictokId: null,
+      mbti: undefined,
       emailAgree: false,
     },
   });
 
   const onSubmit: SubmitHandler<MemberProfileUpdateForm> = (values) => {
-    updateMutation.mutate(values);
+    updateMutation.mutate({
+      ...values,
+      // 빈 문자열 → null 변환 (틱톡만)
+      tictokId: values.tictokId?.trim() || null,
+    });
   };
 
   useEffect(() => {
@@ -35,6 +41,7 @@ export default function ProfileEditClient() {
     methods.reset({
       nickname: data.nickname,
       instagramId: data.instagramId,
+      tictokId: data.tictokId ?? null, // 서버 값 그대로
       mbti: data.mbti,
       emailAgree: data.emailAgree,
     });

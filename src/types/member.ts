@@ -4,6 +4,7 @@ export interface MemberProfileResponse {
   nickname: string;
   phoneNumber: string;
   instagramId: string;
+  tictokId: string | null;
   mbti: string;
   gender: "MALE" | "FEMALE";
   birthDate: string;
@@ -12,7 +13,8 @@ export interface MemberProfileResponse {
 
 export interface MemberProfileUpdateForm {
   nickname: string;
-  instagramId?: string;
+  instagramId: string;
+  tictokId: string | null;
   mbti?: string;
   emailAgree: boolean;
 }
