@@ -20,12 +20,7 @@ export const memberSchema = z
       .string()
       .min(1, { message: e.instagramId.required })
       .regex(/^\S+$/, { message: e.instagramId.noSpace })
-      .regex(/^[a-zA-Z0-9._]{1,30}$/, { message: e.instagramId.invalid })
-      .refine(
-        (v) => !v.startsWith(".") && !v.startsWith("_") && !v.endsWith(".") && !v.endsWith("_"),
-        { message: e.instagramId.edgeDotUnderscore },
-      ),
-
+      .regex(/^[a-zA-Z0-9._]{1,30}$/, { message: e.instagramId.invalid }),
     birthYear: z
       .string()
       .nonempty({ message: e.birth.yearRequired })
