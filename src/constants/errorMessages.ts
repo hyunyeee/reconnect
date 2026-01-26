@@ -43,7 +43,6 @@ export const errorMessages = {
     required: "인스타그램 아이디를 입력해주세요.",
     noSpace: "공백은 사용할 수 없습니다.",
     invalid: "영문, 숫자, 마침표(.), 밑줄(_)만 사용할 수 있습니다.",
-    edgeDotUnderscore: "아이디는 마침표(.) 또는 밑줄(_)로 시작하거나 끝날 수 없습니다.",
   },
   agreement: {
     required: "필수 동의 항목입니다.",

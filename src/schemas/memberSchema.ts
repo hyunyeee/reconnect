@@ -18,9 +18,11 @@ export const memberSchema = z
 
     instagramId: z
       .string()
+      .trim()
       .min(1, { message: e.instagramId.required })
       .regex(/^\S+$/, { message: e.instagramId.noSpace })
       .regex(/^[a-zA-Z0-9._]{1,30}$/, { message: e.instagramId.invalid }),
+
     birthYear: z
       .string()
       .nonempty({ message: e.birth.yearRequired })
