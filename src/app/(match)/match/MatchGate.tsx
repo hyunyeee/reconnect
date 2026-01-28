@@ -4,15 +4,20 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import MatchRegisterForm from "@/components/form/MatchRegisterForm";
-import { useMatchInfo } from "@/hooks/query/useMatch";
+import { useMatchInfo, MatchChannel } from "@/hooks/query/useMatch";
+import { toMatchFormData } from "@/utils/matchFormMapper";
 
-export default function MatchGate() {
+interface Props {
+  channel: MatchChannel;
+}
+
+export default function MatchGate({ channel }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const isEditMode = searchParams.get("mode") === "edit";
 
-  const { data: infoRes, isLoading, isFetching, isError, error } = useMatchInfo();
+  const { data: infoRes, isLoading, isFetching, isError, error } = useMatchInfo(channel);
 
   const ready = !isLoading && !isFetching;
 
@@ -32,17 +37,15 @@ export default function MatchGate() {
     // 이미 요청했고 매칭 안 됨
     if (matched === false) {
       if (isEditMode) return; // 수정은 유저 의도
-      router.replace("/waiting");
+      router.replace(`/waiting/${channel}`);
       return;
     }
 
     // 매칭 완료
     if (matched === true) {
-      router.replace("/success");
+      router.replace(`/success/${channel}`);
     }
-  }, [ready, isError, noRequest, matched, isEditMode, router]);
-
-  // ---------------- UI ----------------
+  }, [ready, isError, noRequest, matched, isEditMode, router, channel]);
 
   if (!ready) {
     return (
@@ -52,12 +55,18 @@ export default function MatchGate() {
 
   // 최초 등록
   if (noRequest) {
-    return <MatchRegisterForm mode="create" />;
+    return <MatchRegisterForm mode="create" channel={channel} />;
   }
 
   // 수정
   if (matched === false && isEditMode && infoRes?.data) {
-    return <MatchRegisterForm mode="edit" defaultValues={infoRes.data} />;
+    return (
+      <MatchRegisterForm
+        mode="edit"
+        channel={channel}
+        defaultValues={toMatchFormData(infoRes.data, channel)}
+      />
+    );
   }
 
   if (isError && error?.code !== "MATCH_002") {
