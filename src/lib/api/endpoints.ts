@@ -13,12 +13,19 @@ export const API = {
     SIGNUP: "/normalMembers",
     LOGIN: "/login",
     LOGOUT: "/logout",
+    ADD_TIKTOK_ID: "/profile/tiktok",
     PROFILE: "/profile/me",
     RESET_PASSWORD: "/reset-password",
   },
   MATCH: {
-    REQUEST: "/matches/request",
-    RESULT: "/matches/result",
+    INSTA: {
+      REQUEST: "/matches/request",
+      RESULT: "/matches/result",
+    },
+    TIKTOK: {
+      REQUEST: "/matches/tiktok/request",
+      RESULT: "/matches/tiktok/result",
+    },
   },
   ATTACHMENT: {
     QUESTIONS: "/attachment-test/questions",
