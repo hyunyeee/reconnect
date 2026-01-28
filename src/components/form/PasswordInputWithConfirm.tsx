@@ -5,28 +5,24 @@ import { useFormContext } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { NormalInput } from "@/components/form/NormalInput";
 
-interface PasswordInputWithConfirmProps {
+interface Props {
   passwordField: string;
   confirmField: string;
 }
 
-export const PasswordInputWithConfirm = ({
-  passwordField,
-  confirmField,
-}: PasswordInputWithConfirmProps) => {
-  const {
-    formState: { errors },
-    watch,
-  } = useFormContext();
+export const PasswordInputWithConfirm = ({ passwordField, confirmField }: Props) => {
+  const { watch } = useFormContext();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const password = watch(passwordField);
   const confirm = watch(confirmField);
-  const passwordsMatch = confirm && password === confirm;
 
-  const confirmError = errors[confirmField]?.message as string | undefined;
+  const showMismatch =
+    password &&
+    confirm &&
+    password !== confirm;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -40,10 +36,10 @@ export const PasswordInputWithConfirm = ({
         />
         <button
           type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute top-7 right-3 flex items-center text-gray-500 transition-colors hover:text-gray-700"
+          onClick={() => setShowPassword((v) => !v)}
+          className="absolute top-7 right-3"
         >
-          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
       </div>
 
@@ -57,15 +53,15 @@ export const PasswordInputWithConfirm = ({
         />
         <button
           type="button"
-          onClick={() => setShowConfirm((prev) => !prev)}
-          className="absolute top-7 right-3 flex items-center text-gray-500 transition-colors hover:text-gray-700"
+          onClick={() => setShowConfirm((v) => !v)}
+          className="absolute top-7 right-3"
         >
-          {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
 
-        {(confirmError || (confirm && !passwordsMatch)) && (
+        {showMismatch && (
           <p className="mt-1 text-xs text-red-500">
-            {confirmError || "비밀번호가 일치하지 않습니다."}
+            비밀번호가 일치하지 않습니다.
           </p>
         )}
       </div>
