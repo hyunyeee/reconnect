@@ -21,12 +21,16 @@ export default function ProfileEditClient() {
     defaultValues: {
       nickname: "",
       instagramId: "",
+      tiktokId: "",
       emailAgree: false,
     },
   });
 
   const onSubmit: SubmitHandler<MemberProfileUpdateForm> = (values) => {
-    updateMutation.mutate(values);
+    updateMutation.mutate({
+      ...values,
+      tiktokId: values.tiktokId?.trim() || null,
+    });
   };
 
   useEffect(() => {
@@ -35,6 +39,7 @@ export default function ProfileEditClient() {
     methods.reset({
       nickname: data.nickname,
       instagramId: data.instagramId,
+      tiktokId: data.tiktokId ?? "",
       mbti: data.mbti,
       emailAgree: data.emailAgree,
     });
@@ -62,6 +67,8 @@ export default function ProfileEditClient() {
         <NormalInput name="nickname" label="닉네임" placeholder="닉네임을 입력하세요" />
 
         <NormalInput name="instagramId" label="인스타그램 ID" placeholder="instagram_id" />
+
+        <NormalInput name="tiktokId" label="틱톡 ID" placeholder="tiktok_id" />
 
         <MbtiDropdown name="mbti" />
 
