@@ -9,7 +9,7 @@ import type { ApiError, ApiResponse } from "@/types/api";
 import { apiClient } from "@/lib/api/client";
 import { API } from "@/lib/api/endpoints";
 
-import type { LoginFormData, MemberFormData } from "@/schemas/memberSchema";
+import type { LoginFormData, MemberSignUpPayload } from "@/schemas/memberSchema";
 import type { MemberProfileResponse, MemberProfileUpdateForm } from "@/types/member";
 
 import { authAtom } from "@/atoms/auth";
@@ -20,7 +20,7 @@ import { authAtom } from "@/atoms/auth";
 export const useSignup = () => {
   const router = useRouter();
 
-  return useMutation<ApiResponse<null>, ApiError, MemberFormData>({
+  return useMutation<ApiResponse<null>, ApiError, MemberSignUpPayload>({
     mutationFn: async (payload) => {
       return apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
         method: "POST",
@@ -140,6 +140,34 @@ export const useUpdateMemberProfile = () => {
     onError: (err) => {
       toast.error("수정 실패", {
         description: err.message ?? "정보 수정 중 오류가 발생했습니다.",
+      });
+    },
+  });
+};
+
+/* =========================
+ * 틱톡 아이디 등록
+ * ========================= */
+
+interface AddTiktokIdPayload {
+  tiktokId: string;
+}
+
+export const useAddTiktokId = () => {
+  return useMutation<ApiResponse<void>, ApiError, AddTiktokIdPayload>({
+    mutationFn: (payload) =>
+      apiClient<ApiResponse<void>>(API.MEMBER.ADD_TIKTOK_ID, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    onSuccess: () => {
+      toast.success("틱톡 아이디가 등록되었습니다.");
+    },
+
+    onError: (err) => {
+      toast.error("틱톡 아이디 등록 실패", {
+        description: err.message ?? "요청 중 오류가 발생했습니다.",
       });
     },
   });
