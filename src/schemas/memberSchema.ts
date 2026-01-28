@@ -7,13 +7,16 @@ export const memberSchema = z
     name: z.string().min(2, { message: e.name.min }),
     nickname: z.string().min(2, { message: e.nickname.min }),
 
-    email: z.email({ message: e.email.invalid }),
-    password: z.string().min(10, { message: e.password.min }),
+    email: z.string().email({ message: e.email.invalid }),
 
-    phoneNumber: z.string().regex(/^010\d{8}$/, { message: e.phoneNumber.invalid }),
+    password: z.string().min(10, { message: e.password.min }),
+    passwordConfirm: z.string().min(1, { message: e.password.required }),
+
+    phoneNumber: z.string().regex(/^010\d{8}$/, {
+      message: e.phoneNumber.invalid,
+    }),
 
     gender: z.enum(["MALE", "FEMALE"], { message: e.gender.required }),
-
     mbti: z.enum(MBTI_LIST, { message: e.mbti.required }),
 
     instagramId: z
@@ -23,48 +26,36 @@ export const memberSchema = z
       .regex(/^\S+$/, { message: e.instagramId.noSpace })
       .regex(/^[a-zA-Z0-9._]{1,30}$/, { message: e.instagramId.invalid }),
 
-    birthYear: z
+    tiktokId: z
       .string()
-      .nonempty({ message: e.birth.yearRequired })
-      .regex(/^\d{4}$/, { message: e.birth.yearFormat }),
+      .trim()
+      .optional()
+      .refine((v) => !v || (/^\S+$/.test(v) && /^[a-zA-Z0-9._]{1,30}$/.test(v)), {
+        message: e.instagramId.invalid,
+      })
+      .transform((v) => (v && v.length > 0 ? v : null)),
 
-    birthMonth: z
-      .string()
-      .nonempty({ message: e.birth.monthRequired })
-      .regex(/^(0[1-9]|1[0-2])$/, { message: e.birth.monthFormat }),
+    birthYear: z.string(),
+    birthMonth: z.string(),
+    birthDay: z.string(),
+    birthDate: z.string().min(1, { message: e.birth.required }),
 
-    birthDay: z
-      .string()
-      .nonempty({ message: e.birth.dayRequired })
-      .regex(/^([0-2][0-9]|3[0-1])$/, { message: e.birth.dayFormat }),
+    privacyAgree: z.boolean().refine((v) => v === true, {
+      message: e.agreement.required,
+    }),
+    useAgree: z.boolean().refine((v) => v === true, {
+      message: e.agreement.required,
+    }),
 
-    privacyAgree: z.boolean().refine((v) => v === true, { message: e.agreement.required }),
-    useAgree: z.boolean().refine((v) => v === true, { message: e.agreement.required }),
     emailAgree: z.boolean().optional(),
   })
-  .refine(
-    (values) => {
-      const { birthYear, birthMonth, birthDay } = values;
+  .refine((data) => data.password === data.passwordConfirm, {
+    path: ["passwordConfirm"],
+    message: e.passwordConfirm.notMatch,
+  });
 
-      // 조합된 날짜가 유효한지 체크
-      const dateStr = `${birthYear}-${birthMonth}-${birthDay}`;
-      const date = new Date(dateStr);
-
-      const valid =
-        !isNaN(date.getTime()) &&
-        date.getFullYear().toString() === birthYear &&
-        (date.getMonth() + 1).toString().padStart(2, "0") === birthMonth &&
-        date.getDate().toString().padStart(2, "0") === birthDay;
-
-      return valid;
-    },
-    {
-      message: e.birth.invalidDate,
-      path: ["birthDay"], // 여기 에러 표시
-    },
-  );
-
-export type MemberFormData = z.infer<typeof memberSchema>;
+/** 회원가입 payload */
+export type MemberSignUpPayload = Omit<z.infer<typeof memberSchema>, "passwordConfirm">;
 
 export const loginSchema = z.object({
   email: z.string().email({ message: e.email.invalid }),
