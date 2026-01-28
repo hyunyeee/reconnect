@@ -20,6 +20,8 @@ export const errorMessages = {
     notMatch: "비밀번호가 일치하지 않습니다.",
   },
   birth: {
+    required: "생년월일을 선택해주세요.",
+
     yearRequired: "출생 연도를 입력해주세요.",
     yearFormat: "출생 연도는 4자리 숫자여야 합니다.",
 
