@@ -34,24 +34,20 @@ export default function MatchGate({ channel }: Props) {
     // 아직 요청 없음 → 등록 폼
     if (noRequest) return;
 
-    // 이미 요청했고 매칭 안 됨
-    if (matched === false) {
-      if (isEditMode) return; // 수정은 유저 의도
+    // 매칭 완료 상태에서는 edit 진입 차단
+    if (matched === true) {
+      router.replace(`/success/${channel}`);
+      return;
+    }
+
+    // 매칭은 안 됐지만, edit이 아닌 경우 → waiting
+    if (matched === false && !isEditMode) {
       router.replace(`/waiting/${channel}`);
       return;
     }
 
-    // 매칭 완료
-    if (matched === true) {
-      router.replace(`/success/${channel}`);
-    }
+    // matched === false && isEditMode → 아래에서 edit 폼 렌더
   }, [ready, isError, noRequest, matched, isEditMode, router, channel]);
-
-  if (!ready) {
-    return (
-      <p className="mt-10 text-center text-sm text-gray-500">매칭 정보를 불러오는 중이에요...</p>
-    );
-  }
 
   // 최초 등록
   if (noRequest) {
