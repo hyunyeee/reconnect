@@ -12,7 +12,7 @@ import { API } from "@/lib/api/endpoints";
 import type { LoginFormData, MemberSignUpPayload } from "@/schemas/memberSchema";
 import type { MemberProfileResponse, MemberProfileUpdateForm } from "@/types/member";
 
-import { authAtom } from "@/atoms/auth";
+import { authAtom, AuthUser } from "@/atoms/auth";
 
 /* =========================
  * 회원가입
@@ -21,18 +21,19 @@ export const useSignup = () => {
   const router = useRouter();
 
   return useMutation<ApiResponse<null>, ApiError, MemberSignUpPayload>({
-    mutationFn: async (payload) => {
-      return apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
+    mutationFn: (payload) =>
+      apiClient<ApiResponse<null>>(API.MEMBER.SIGNUP, {
         method: "POST",
         body: JSON.stringify(payload),
-      });
-    },
+      }),
+
     onSuccess: () => {
       toast.success("회원가입 완료", {
         description: "가입이 성공적으로 완료되었습니다.",
       });
       router.push("/login");
     },
+
     onError: (err) => {
       toast.error("회원가입 실패", {
         description: err.message ?? "회원가입 중 오류가 발생했습니다.",
@@ -48,21 +49,26 @@ export const useLogin = () => {
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
 
-  return useMutation<ApiResponse<null>, ApiError, LoginFormData>({
-    mutationFn: async (payload) => {
-      return apiClient<ApiResponse<null>>(API.MEMBER.LOGIN, {
+  return useMutation<ApiResponse<AuthUser>, ApiError, LoginFormData>({
+    mutationFn: (payload) =>
+      apiClient<ApiResponse<AuthUser>>(API.MEMBER.LOGIN, {
         method: "POST",
         body: JSON.stringify({
           memberEmail: payload.email,
           memberPassword: payload.password,
         }),
+      }),
+
+    onSuccess: (res) => {
+      setAuth({
+        isLoggedIn: true,
+        user: res.data,
       });
-    },
-    onSuccess: () => {
-      setAuth({ isLoggedIn: true });
+
       toast.success("로그인 성공", { description: "반가워요!" });
       router.push("/");
     },
+
     onError: (err) => {
       toast.error("로그인 실패", {
         description: err.message ?? "아이디 또는 비밀번호를 확인해주세요.",
@@ -79,16 +85,21 @@ export const useLogout = () => {
   const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, void>({
-    mutationFn: async () => {
-      return apiClient<ApiResponse<null>>(API.MEMBER.LOGOUT, {
+    mutationFn: () =>
+      apiClient<ApiResponse<null>>(API.MEMBER.LOGOUT, {
         method: "POST",
-      });
-    },
+      }),
+
     onSuccess: () => {
-      setAuth({ isLoggedIn: false });
+      setAuth({
+        isLoggedIn: false,
+        user: null,
+      });
+
       toast.success("로그아웃 되었습니다.");
       router.push("/login");
     },
+
     onError: (err) => {
       toast.error("로그아웃 실패", {
         description: err.message ?? "로그아웃 중 오류가 발생했습니다.",
@@ -98,14 +109,17 @@ export const useLogout = () => {
 };
 
 /* =========================
- * 내 정보 조회 (캐시 완전 차단)
+ * 내 정보 조회
  * ========================= */
+
 export const useMemberProfile = () => {
   return useQuery<ApiResponse<MemberProfileResponse>, ApiError, MemberProfileResponse>({
     queryKey: ["memberProfile"],
-    queryFn: async () => {
-      return apiClient<ApiResponse<MemberProfileResponse>>(API.MEMBER.PROFILE, { method: "GET" });
-    },
+    queryFn: () =>
+      apiClient<ApiResponse<MemberProfileResponse>>(API.MEMBER.PROFILE, {
+        method: "GET",
+      }),
+
     select: (res) => res.data,
 
     staleTime: 0,
@@ -123,12 +137,12 @@ export const useUpdateMemberProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdateForm>({
-    mutationFn: async (payload) => {
-      return apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
+    mutationFn: (payload) =>
+      apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
         method: "PATCH",
         body: JSON.stringify(payload),
-      });
-    },
+      }),
+
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["memberProfile"],
@@ -137,6 +151,7 @@ export const useUpdateMemberProfile = () => {
       toast.success("내 정보가 수정되었습니다.");
       router.push("/");
     },
+
     onError: (err) => {
       toast.error("수정 실패", {
         description: err.message ?? "정보 수정 중 오류가 발생했습니다.",
@@ -148,12 +163,13 @@ export const useUpdateMemberProfile = () => {
 /* =========================
  * 틱톡 아이디 등록
  * ========================= */
-
 interface AddTiktokIdPayload {
   tiktokId: string;
 }
 
 export const useAddTiktokId = () => {
+  const setAuth = useSetAtom(authAtom);
+
   return useMutation<ApiResponse<void>, ApiError, AddTiktokIdPayload>({
     mutationFn: (payload) =>
       apiClient<ApiResponse<void>>(API.MEMBER.ADD_TIKTOK_ID, {
@@ -161,7 +177,19 @@ export const useAddTiktokId = () => {
         body: JSON.stringify(payload),
       }),
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      const { tiktokId } = variables;
+
+      setAuth((prev) => ({
+        ...prev,
+        user: prev.user
+          ? {
+              ...prev.user,
+              tiktokId,
+            }
+          : prev.user,
+      }));
+
       toast.success("틱톡 아이디가 등록되었습니다.");
     },
 
@@ -187,18 +215,19 @@ export const useResetPassword = () => {
       newPassword: string;
     }
   >({
-    mutationFn: async (payload) => {
-      return apiClient<ApiResponse<null>>(API.MEMBER.RESET_PASSWORD, {
+    mutationFn: (payload) =>
+      apiClient<ApiResponse<null>>(API.MEMBER.RESET_PASSWORD, {
         method: "POST",
         body: JSON.stringify(payload),
-      });
-    },
+      }),
+
     onSuccess: () => {
       toast.success("비밀번호 변경 완료", {
         description: "새 비밀번호로 로그인해주세요.",
       });
       router.push("/login");
     },
+
     onError: (err) => {
       toast.error("비밀번호 변경 실패", {
         description: err.message ?? "처리 중 오류가 발생했습니다.",
