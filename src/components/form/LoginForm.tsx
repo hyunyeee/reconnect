@@ -1,16 +1,15 @@
 "use client";
 
 import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { UserPlus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { KeyRound, UserPlus } from "lucide-react";
 
 import { NormalInput } from "@/components/form/NormalInput";
 import { Button } from "@/components/ui/button";
 import { LoginFormData, loginSchema } from "@/schemas/memberSchema";
 
 import { useLogin } from "@/hooks/query/useAuth";
-
 
 export default function LoginForm() {
   const methods = useForm<LoginFormData>({
@@ -43,14 +42,28 @@ export default function LoginForm() {
         </Button>
       </form>
 
-      <div className="mt-4 border-t border-gray-200 pt-4">
+      <div className="mt-4 space-y-2 border-t border-gray-200 pt-4">
+        {/* 회원가입 */}
         <Link href="/signup" passHref>
           <Button
-            className="w-full text-gray-700 transition duration-200 hover:bg-gray-100"
             variant="ghost"
+            className="w-full justify-center text-gray-700 transition duration-200 hover:bg-gray-100"
           >
             <UserPlus className="mr-2 h-4 w-4" />
-            아직 회원이 아니신가요? <b className="text-main-pink">회원가입하기</b>
+            아직 회원이 아니신가요?
+            <b className="text-main-pink ml-1">회원가입하기</b>
+          </Button>
+        </Link>
+
+        {/* 비밀번호 재설정 */}
+        <Link href="/mypage/password" passHref>
+          <Button
+            variant="ghost"
+            className="w-full justify-center text-gray-700 transition duration-200 hover:bg-gray-100"
+          >
+            <KeyRound className="mr-2 h-4 w-4" />
+            비밀번호를 잊으셨나요?
+            <b className="text-main-pink ml-1">비밀번호 재설정</b>
           </Button>
         </Link>
       </div>
