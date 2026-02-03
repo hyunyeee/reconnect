@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -56,7 +56,7 @@ export const useMatchRequest = (channel: MatchChannel) => {
 
     onSuccess: () => {
       toast.success("매칭 요청 완료");
-      router.push("/waiting");
+      router.push(`/waiting/${channel}`);
     },
 
     onError: (err) => {
@@ -96,6 +96,8 @@ export const useMatchInfo = (channel: MatchChannel) => {
  * ========================= */
 
 export const useMatchUpdate = (channel: MatchChannel) => {
+  const queryClient = useQueryClient();
+
   return useMutation<ApiResponse<void>, ApiError, MatchRequestPayload>({
     mutationFn: (payload) =>
       apiClient<ApiResponse<void>>(getMatchAPI(channel).REQUEST, {
@@ -105,6 +107,10 @@ export const useMatchUpdate = (channel: MatchChannel) => {
 
     onSuccess: () => {
       toast.success("매칭 정보가 수정되었습니다.");
+
+      queryClient.invalidateQueries({
+        queryKey: ["match-info", channel],
+      });
     },
 
     onError: (err) => {
