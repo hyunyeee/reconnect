@@ -29,23 +29,18 @@ export const memberSchema = z
     tiktokId: z
       .string()
       .trim()
-      .optional()
+      .nullable()
       .refine((v) => !v || (/^\S+$/.test(v) && /^[a-zA-Z0-9._]{1,30}$/.test(v)), {
         message: e.instagramId.invalid,
-      })
-      .transform((v) => (v && v.length > 0 ? v : null)),
+      }),
 
     birthYear: z.string(),
     birthMonth: z.string(),
     birthDay: z.string(),
     birthDate: z.string().min(1, { message: e.birth.required }),
 
-    privacyAgree: z.boolean().refine((v) => v === true, {
-      message: e.agreement.required,
-    }),
-    useAgree: z.boolean().refine((v) => v === true, {
-      message: e.agreement.required,
-    }),
+    privacyAgree: z.literal(true, { message: e.agreement.required }),
+    useAgree: z.literal(true, { message: e.agreement.required }),
 
     emailAgree: z.boolean().optional(),
   })
@@ -54,9 +49,11 @@ export const memberSchema = z
     message: e.passwordConfirm.notMatch,
   });
 
-/** 회원가입 payload */
-export type MemberSignUpPayload = Omit<z.infer<typeof memberSchema>, "passwordConfirm">;
+export type MemberSignUpPayload = Omit<z.infer<typeof memberSchema>, "passwordConfirm"> & {
+  tiktokId: string | null;
+};
 
+/* ===== 로그인 스키마 ===== */
 export const loginSchema = z.object({
   email: z.string().email({ message: e.email.invalid }),
   password: z.string().min(1, { message: e.password.required }),
