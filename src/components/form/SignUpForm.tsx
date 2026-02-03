@@ -1,7 +1,8 @@
 "use client";
 
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { z } from "zod";
 
 import { useSignup } from "@/hooks/query/useAuth";
 import { NormalInput } from "@/components/form/NormalInput";
@@ -12,10 +13,13 @@ import { PasswordInputWithConfirm } from "@/components/form/PasswordInputWithCon
 import { DatePickerInput } from "@/components/form/DatePickerInput";
 import { PhoneInput } from "@/components/form/PhoneInput";
 import MbtiDropdown from "@/components/form/MbtiDropdown";
+
 import { memberSchema, MemberSignUpPayload } from "@/schemas/memberSchema";
 
+type SignUpFormValues = z.infer<typeof memberSchema>;
+
 export default function SignUpForm() {
-  const methods = useForm({
+  const methods = useForm<SignUpFormValues>({
     resolver: zodResolver(memberSchema),
     mode: "onChange",
     defaultValues: {
@@ -27,25 +31,38 @@ export default function SignUpForm() {
       passwordConfirm: "",
       gender: "MALE",
       instagramId: "",
-      tiktokId: "",
-      mbti: "",
+      tiktokId: null,
       birthYear: "",
       birthMonth: "",
       birthDay: "",
-      birthDate: "", // 검증용 필드
-      privacyAgree: false,
-      useAgree: false,
+      birthDate: "",
+      privacyAgree: true,
+      useAgree: true,
       emailAgree: false,
     },
   });
 
+  const { setError, formState } = methods;
   const signUpMutation = useSignup();
 
-  const onSubmit = (data: any) => {
-    const parsed = memberSchema.parse(data);
-    const { passwordConfirm, ...payload } = parsed;
+  const onSubmit: SubmitHandler<SignUpFormValues> = (data) => {
+    // 휴대폰 인증 안 된 경우 (형식 에러는 이미 resolver가 처리)
+    if (!formState.errors.phoneNumber && data.phoneNumber) {
+      setError("phoneNumber", {
+        type: "manual",
+        message: "휴대폰 인증을 완료해주세요.",
+      });
+      return;
+    }
 
-    signUpMutation.mutate(payload as MemberSignUpPayload);
+    const { passwordConfirm, tiktokId, ...rest } = data;
+
+    const payload: MemberSignUpPayload = {
+      ...rest,
+      tiktokId: tiktokId && tiktokId.trim() !== "" ? tiktokId : null,
+    };
+
+    signUpMutation.mutate(payload);
   };
 
   return (
@@ -65,8 +82,12 @@ export default function SignUpForm() {
         </section>
 
         <section className="space-y-5">
-          <NormalInput name="instagramId" label="인스타그램 ID" placeholder="instagram ID" />
-          <NormalInput name="tiktokId" label="틱톡 ID" placeholder="tiktok ID (선택)" />
+          <NormalInput
+            name="instagramId"
+            label="인스타그램 ID"
+            placeholder="인스타그램 ID를 입력하세요"
+          />
+          <NormalInput name="tiktokId" label="틱톡 ID (선택)" placeholder="틱톡 ID를 입력하세요" />
           <GenderSelect name="gender" label="성별" />
           <MbtiDropdown name="mbti" />
           <DatePickerInput

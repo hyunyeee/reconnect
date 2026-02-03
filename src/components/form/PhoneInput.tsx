@@ -30,6 +30,7 @@ export const PhoneInput = ({
   const {
     register,
     getValues,
+    clearErrors,
     formState: { errors },
   } = useFormContext();
 
@@ -38,14 +39,18 @@ export const PhoneInput = ({
   const { mutate: sendPhoneCode, isPending } = useSendPhoneCode();
   const { openOverlay } = useOverlay();
 
-  const error = errors[name]?.message as string | undefined;
+  const errorMessage = errors[name]?.message as string | undefined;
 
-  const canSend = !disabled && !error;
+  // 인증 필요 에러인지 구분
+  const isVerifyError = errorMessage === "휴대폰 인증을 완료해주세요.";
+
+  // 형식 에러일 때만 막고, 인증 에러일 때는 허용
+  const canSend = !disabled && (!errorMessage || isVerifyError);
 
   const handleClick = () => {
     const value = getValues(name) as string;
 
-    if (!value || error) {
+    if (!value || (!canSend && !isVerifyError)) {
       toast.error("올바른 전화번호를 입력해주세요.");
       return;
     }
@@ -60,6 +65,7 @@ export const PhoneInput = ({
               phoneNumber={value}
               onVerified={() => {
                 setIsVerified(true);
+                clearErrors(name);
                 toast.success("휴대폰 인증이 완료되었습니다.");
               }}
             />,
@@ -78,10 +84,19 @@ export const PhoneInput = ({
           id={name}
           placeholder={placeholder}
           readOnly={isVerified}
-          {...register(name)}
+          {...register(name, {
+            onChange: () => {
+              if (isVerified) {
+                setIsVerified(false);
+                clearErrors(name); //  인증 에러 초기화
+              }
+            },
+          })}
           className={cn(
             "flex-1 rounded-md border px-3 py-2 text-sm transition-colors outline-none",
-            error ? "border-red-500 hover:border-red-500" : "border-gray-300 hover:border-gray-400",
+            errorMessage
+              ? "border-red-500 hover:border-red-500"
+              : "border-gray-300 hover:border-gray-400",
           )}
         />
 
@@ -111,7 +126,7 @@ export const PhoneInput = ({
         )}
       </div>
 
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {errorMessage && <p className="mt-1 text-xs text-red-500">{errorMessage}</p>}
     </div>
   );
 };
