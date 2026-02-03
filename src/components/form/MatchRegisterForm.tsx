@@ -23,7 +23,6 @@ export default function MatchRegisterForm({ mode, channel, defaultValues }: Prop
   const methods = useForm<MatchFormData>({
     resolver: zodResolver(matchSchema),
     mode: "onChange",
-
     defaultValues:
       defaultValues ??
       ({
@@ -36,27 +35,55 @@ export default function MatchRegisterForm({ mode, channel, defaultValues }: Prop
   });
 
   const { mutate: requestMatch, isPending: isCreating } = useMatchRequest(channel);
-
   const { mutate: updateMatch, isPending: isUpdating } = useMatchUpdate(channel);
 
   const isPending = isCreating || isUpdating;
 
   const onSubmit: SubmitHandler<MatchFormData> = (data) => {
-    if (mode === "edit") {
-      updateMatch(data);
-      router.push(`/waiting/${channel}`);
+    const basePayload = {
+      targetName: data.targetName,
+      targetPhone: data.targetPhone,
+      requesterDesire: data.requesterDesire,
+    };
+
+    if (data.channel === "insta") {
+      const payload = {
+        ...basePayload,
+        targetInsta: data.targetInsta,
+      };
+
+      if (mode === "edit") {
+        updateMatch(payload);
+        router.push(`/waiting/insta`);
+        return;
+      }
+
+      requestMatch(payload);
+      router.push(`/waiting/insta`);
       return;
     }
 
-    requestMatch(data);
-    router.push(`/waiting/${channel}`);
+    // 여기부터는 TypeScript가 자동으로 tiktok 타입으로 좁힘
+    const payload = {
+      ...basePayload,
+      targetTiktok: data.targetTiktok,
+    };
+
+    if (mode === "edit") {
+      updateMatch(payload);
+      router.push(`/waiting/tiktok`);
+      return;
+    }
+
+    console.log(payload);
+    requestMatch(payload);
+    router.push(`/waiting/tiktok`);
   };
 
   return (
     <>
-      <BackHeader
-        backHref="/match"
-      />
+      <BackHeader backHref="/match" />
+
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="flex w-full flex-col space-y-10">
           <h1 className="text-center text-2xl font-bold">
@@ -88,7 +115,7 @@ export default function MatchRegisterForm({ mode, channel, defaultValues }: Prop
             )}
 
             {channel === "tiktok" && (
-              <NormalInput name="targetTiktok" label="틱톡 ID" placeholder="tictok ID" />
+              <NormalInput name="targetTiktok" label="틱톡 ID" placeholder="tiktok ID" />
             )}
 
             <DesireSlider name="requesterDesire" label="다시 만나고 싶은 마음" />
