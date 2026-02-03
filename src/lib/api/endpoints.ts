@@ -10,12 +10,12 @@ export const API = {
     VERIFY: "/phone/verify",
   },
   MEMBER: {
-    SIGNUP: "/normalMembers",
-    LOGIN: "/login",
-    LOGOUT: "/logout",
+    SIGNUP: "/auth/normalMembers",
+    LOGIN: "/auth/login",
+    LOGOUT: "/auth/logout",
     ADD_TIKTOK_ID: "/profile/tiktok",
     PROFILE: "/profile/me",
-    RESET_PASSWORD: "/reset-password",
+    RESET_PASSWORD: "/auth/reset-password",
   },
   MATCH: {
     INSTA: {
