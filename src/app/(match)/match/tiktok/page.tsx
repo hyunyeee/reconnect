@@ -1,11 +1,14 @@
 "use client";
 
+import { useAtomValue } from "jotai";
 import MatchGate from "@/app/(match)/match/MatchGate";
 import { BackHeader } from "@/components/layout/BackHeader";
 import AddTiktokIdInline from "@/components/form/AddTiktokIdInline";
+import { authAtom } from "@/atoms/auth";
 
 export default function TiktokMatchPage() {
-  const hasMyTiktok = false;
+  const { user } = useAtomValue(authAtom);
+  const hasMyTiktok = Boolean(user?.tiktokId);
 
   if (!hasMyTiktok) {
     return (
