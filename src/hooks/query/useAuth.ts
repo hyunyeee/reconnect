@@ -135,6 +135,7 @@ export const useMemberProfile = () => {
 export const useUpdateMemberProfile = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const setAuth = useSetAtom(authAtom);
 
   return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdateForm>({
     mutationFn: (payload) =>
@@ -143,10 +144,24 @@ export const useUpdateMemberProfile = () => {
         body: JSON.stringify(payload),
       }),
 
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["memberProfile"],
+    onSuccess: (_, payload) => {
+      // 전역 authAtom 동기화
+      setAuth((prev) => {
+        if (!prev.user) return prev;
+
+        return {
+          ...prev,
+          user: {
+            ...prev.user,
+            // PATCH에 포함된 필드만 덮어씀
+            ...(payload.tiktokId !== undefined && {
+              tiktokId: payload.tiktokId,
+            }),
+          },
+        };
       });
+
+      queryClient.invalidateQueries({ queryKey: ["memberProfile"] });
 
       toast.success("내 정보가 수정되었습니다.");
       router.push("/");
@@ -155,6 +170,52 @@ export const useUpdateMemberProfile = () => {
     onError: (err) => {
       toast.error("수정 실패", {
         description: err.message ?? "정보 수정 중 오류가 발생했습니다.",
+      });
+    },
+  });
+};
+
+/* =========================
+ * 회원 탈퇴
+ * ========================= */
+export const useDeleteMember = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const setAuth = useSetAtom(authAtom);
+
+  return useMutation<ApiResponse<null>, ApiError, void>({
+    mutationFn: async () => {
+      const confirmed = window.confirm(
+        "정말 탈퇴하시겠습니까?\n탈퇴 시 모든 정보는 삭제되며 복구할 수 없습니다.",
+      );
+
+      if (!confirmed) {
+        // react-query mutation 취소용 에러
+        throw new Error("CANCELLED");
+      }
+
+      return apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
+        method: "DELETE",
+      });
+    },
+
+    onSuccess: async () => {
+      // 로그인 상태 관련 캐시 전부 정리
+      queryClient.clear();
+      setAuth({
+        isLoggedIn: false,
+        user: null,
+      });
+
+      toast.success("회원 탈퇴가 완료되었습니다.");
+      router.replace("/");
+    },
+
+    onError: (err) => {
+      if (err.message === "CANCELLED") return;
+
+      toast.error("탈퇴 실패", {
+        description: err.message ?? "회원 탈퇴 중 오류가 발생했습니다.",
       });
     },
   });
@@ -173,7 +234,7 @@ export const useAddTiktokId = () => {
   return useMutation<ApiResponse<void>, ApiError, AddTiktokIdPayload>({
     mutationFn: (payload) =>
       apiClient<ApiResponse<void>>(API.MEMBER.ADD_TIKTOK_ID, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(payload),
       }),
 
