@@ -22,6 +22,20 @@ export async function apiClient<T>(path: string, options?: RequestInit): Promise
     };
   }
 
+  // 권한 없음 → 로그인 페이지로 이동
+  if (res.status === 403) {
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+
+    throw {
+      type: "FORBIDDEN",
+      code: data.code ?? "FORBIDDEN",
+      message: data.message ?? "접근 권한이 없습니다.",
+      status: 403,
+    };
+  }
+
   if (!res.ok) {
     throw {
       type: "API_ERROR",

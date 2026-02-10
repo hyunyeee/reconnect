@@ -10,15 +10,23 @@ export const API = {
     VERIFY: "/phone/verify",
   },
   MEMBER: {
-    SIGNUP: "/normalMembers",
-    LOGIN: "/login",
-    LOGOUT: "/logout",
+    SIGNUP: "/auth/normalMembers",
+    LOGIN: "/auth/login",
+    LOGOUT: "/auth/logout",
+    ADD_TIKTOK_ID: "/profile/tiktok",
     PROFILE: "/profile/me",
-    RESET_PASSWORD: "/reset-password",
+    DELETE: "/profile/member",
+    RESET_PASSWORD: "/auth/reset-password",
   },
   MATCH: {
-    REQUEST: "/matches/request",
-    RESULT: "/matches/result",
+    INSTA: {
+      REQUEST: "/matches/request",
+      RESULT: "/matches/result",
+    },
+    TIKTOK: {
+      REQUEST: "/matches/tiktok/request",
+      RESULT: "/matches/tiktok/result",
+    },
   },
   ATTACHMENT: {
     QUESTIONS: "/attachment-test/questions",

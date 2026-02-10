@@ -18,7 +18,7 @@ import { MyPageNavbar } from "@/components/layout/MyPageNavbar";
  *  🚧 점검 모드 스위치
  *  서버 복구되면 false로만 바꾸면 끝
  *  =============================== */
-const IS_MAINTENANCE = true;
+const IS_MAINTENANCE = false;
 
 export default function LandingClient() {
   const [h1Scope, animateH1] = useAnimate();
