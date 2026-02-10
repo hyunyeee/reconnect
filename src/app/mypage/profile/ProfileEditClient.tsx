@@ -41,9 +41,15 @@ export default function ProfileEditClient() {
   }, [data, methods]);
 
   const onSubmit = (values: MemberProfileUpdateForm) => {
+    const trimmedTiktokId = values.tiktokId?.trim();
+
+    if (!trimmedTiktokId) {
+      alert("틱톡 아이디를 등록하지 않으면\n<틱톡으로 매칭하기> 기능을 이용하기 어려울 수 있어요.");
+    }
+
     updateMutation.mutate({
       ...values,
-      tiktokId: values.tiktokId?.trim() || null,
+      tiktokId: trimmedTiktokId || null,
     });
   };
 
