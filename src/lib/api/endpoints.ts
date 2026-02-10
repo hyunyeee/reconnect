@@ -15,6 +15,7 @@ export const API = {
     LOGOUT: "/auth/logout",
     ADD_TIKTOK_ID: "/profile/tiktok",
     PROFILE: "/profile/me",
+    DELETE: "/profile/member",
     RESET_PASSWORD: "/auth/reset-password",
   },
   MATCH: {

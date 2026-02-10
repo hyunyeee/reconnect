@@ -10,7 +10,7 @@ import { apiClient } from "@/lib/api/client";
 import { API } from "@/lib/api/endpoints";
 
 import type { LoginFormData, MemberSignUpPayload } from "@/schemas/memberSchema";
-import type { MemberProfileResponse, MemberProfileUpdateForm } from "@/types/member";
+import { MemberProfileResponse, MemberProfileUpdatePayload } from "@/types/member";
 
 import { authAtom, AuthUser } from "@/atoms/auth";
 
@@ -137,7 +137,7 @@ export const useUpdateMemberProfile = () => {
   const queryClient = useQueryClient();
   const setAuth = useSetAtom(authAtom);
 
-  return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdateForm>({
+  return useMutation<ApiResponse<null>, ApiError, MemberProfileUpdatePayload>({
     mutationFn: (payload) =>
       apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
         method: "PATCH",
@@ -194,7 +194,7 @@ export const useDeleteMember = () => {
         throw new Error("CANCELLED");
       }
 
-      return apiClient<ApiResponse<null>>(API.MEMBER.PROFILE, {
+      return apiClient<ApiResponse<null>>(API.MEMBER.DELETE, {
         method: "DELETE",
       });
     },
