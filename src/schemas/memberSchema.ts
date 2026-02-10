@@ -60,3 +60,29 @@ export const loginSchema = z.object({
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
+
+/* ===== 프로필 수정 스키마 ===== */
+export const memberProfileUpdateSchema = z.object({
+  nickname: z.string().min(2, { message: e.nickname.min }),
+
+  instagramId: z
+    .string()
+    .trim()
+    .min(1, { message: e.instagramId.required })
+    .regex(/^\S+$/, { message: e.instagramId.noSpace })
+    .regex(/^[a-zA-Z0-9._]{1,30}$/, { message: e.instagramId.invalid }),
+
+  tiktokId: z
+    .string()
+    .trim()
+    .nullable()
+    .refine((v) => !v || (/^\S+$/.test(v) && /^[a-zA-Z0-9._]{1,30}$/.test(v)), {
+      message: e.instagramId.invalid,
+    }),
+
+  mbti: z.enum(MBTI_LIST).optional(),
+
+  emailAgree: z.boolean().optional(),
+});
+
+export type MemberProfileUpdateForm = z.infer<typeof memberProfileUpdateSchema>;
