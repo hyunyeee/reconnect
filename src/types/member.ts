@@ -11,10 +11,10 @@ export interface MemberProfileResponse {
   emailAgree: boolean;
 }
 
-export interface MemberProfileUpdateForm {
+export interface MemberProfileUpdatePayload {
   nickname: string;
-  instagramId?: string;
-  tiktokId?: string | null;
+  instagramId: string;
+  tiktokId: string | null;
   mbti?: string;
   emailAgree: boolean;
 }
