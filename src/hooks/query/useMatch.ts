@@ -122,6 +122,32 @@ export const useMatchUpdate = (channel: MatchChannel) => {
 };
 
 /* =========================
+ * 매칭 취소
+ * ========================= */
+
+export const useMatchCancel = (channel: MatchChannel) => {
+  const router = useRouter();
+
+  return useMutation<ApiResponse<null>, ApiError, void>({
+    mutationFn: () =>
+      apiClient<ApiResponse<null>>(getMatchAPI(channel).REQUEST, {
+        method: "DELETE",
+      }),
+
+    onSuccess: () => {
+      toast.success("매칭 요청이 취소되었습니다.");
+      router.replace(`/match/${channel}`);
+    },
+
+    onError: (err) => {
+      toast.error("매칭 취소 실패", {
+        description: err.message ?? "요청 중 오류가 발생했습니다.",
+      });
+    },
+  });
+};
+
+/* =========================
  * 매칭 결과 (공통)
  * ========================= */
 
