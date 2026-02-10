@@ -30,6 +30,7 @@ export const PhoneInput = ({
   const {
     register,
     getValues,
+    setValue,
     clearErrors,
     formState: { errors },
   } = useFormContext();
@@ -40,11 +41,8 @@ export const PhoneInput = ({
   const { openOverlay } = useOverlay();
 
   const errorMessage = errors[name]?.message as string | undefined;
-
-  // 인증 필요 에러인지 구분
   const isVerifyError = errorMessage === "휴대폰 인증을 완료해주세요.";
 
-  // 형식 에러일 때만 막고, 인증 에러일 때는 허용
   const canSend = !disabled && (!errorMessage || isVerifyError);
 
   const handleClick = () => {
@@ -65,7 +63,10 @@ export const PhoneInput = ({
               phoneNumber={value}
               onVerified={() => {
                 setIsVerified(true);
+                setValue("isPhoneVerified", true, { shouldValidate: true });
+                setValue(name, value); // 값 유지
                 clearErrors(name);
+                clearErrors("isPhoneVerified");
                 toast.success("휴대폰 인증이 완료되었습니다.");
               }}
             />,
@@ -88,7 +89,8 @@ export const PhoneInput = ({
             onChange: () => {
               if (isVerified) {
                 setIsVerified(false);
-                clearErrors(name); //  인증 에러 초기화
+                setValue("isPhoneVerified", false);
+                clearErrors(name);
               }
             },
           })}

@@ -39,27 +39,36 @@ export default function SignUpForm() {
       privacyAgree: true,
       useAgree: true,
       emailAgree: false,
+      mbti: "",
+      isPhoneVerified: false,
     },
   });
 
-  const { setError, formState } = methods;
   const signUpMutation = useSignup();
 
   const onSubmit: SubmitHandler<SignUpFormValues> = (data) => {
-    // 휴대폰 인증 안 된 경우 (형식 에러는 이미 resolver가 처리)
-    if (!formState.errors.phoneNumber && data.phoneNumber) {
-      setError("phoneNumber", {
-        type: "manual",
-        message: "휴대폰 인증을 완료해주세요.",
-      });
+    // 인증 안 됐으면 alert로 바로 알려주고 제출 막기
+    if (!data.isPhoneVerified) {
+      alert("휴대폰 인증을 완료해주세요.");
       return;
     }
 
-    const { passwordConfirm, tiktokId, ...rest } = data;
-
     const payload: MemberSignUpPayload = {
-      ...rest,
-      tiktokId: tiktokId && tiktokId.trim() !== "" ? tiktokId : null,
+      name: data.name,
+      nickname: data.nickname,
+      email: data.email,
+      password: data.password,
+      phoneNumber: data.phoneNumber,
+      gender: data.gender,
+      mbti: data.mbti,
+      instagramId: data.instagramId,
+      tiktokId: data.tiktokId && data.tiktokId.trim() !== "" ? data.tiktokId : null,
+      birthYear: data.birthYear,
+      birthMonth: data.birthMonth,
+      birthDay: data.birthDay,
+      privacyAgree: data.privacyAgree,
+      useAgree: data.useAgree,
+      emailAgree: data.emailAgree ?? false,
     };
 
     signUpMutation.mutate(payload);
@@ -101,8 +110,12 @@ export default function SignUpForm() {
 
         <AgreementSection />
 
-        <Button type="submit" className="bg-main-pink w-full py-3 text-white">
-          회원가입
+        <Button
+          type="submit"
+          disabled={signUpMutation.isPending}
+          className="bg-main-pink w-full py-3 text-white"
+        >
+          {signUpMutation.isPending ? "가입 중..." : "회원가입"}
         </Button>
       </form>
     </FormProvider>
