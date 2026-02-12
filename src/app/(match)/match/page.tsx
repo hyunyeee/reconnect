@@ -31,6 +31,25 @@ export default function MatchSelectPage() {
           </div>
         </Link>
       </div>
+      <section className="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 className="mb-4 text-base font-semibold text-gray-900">📱 플랫폼 기준 매칭 방식</h2>
+
+        <div className="space-y-3 text-sm leading-relaxed text-gray-700">
+          <p>
+            인스타그램 아이디는 <span className="font-semibold text-gray-900">인스타그램끼리</span>
+            만 매칭되고,
+            <br />
+            틱톡 아이디는 <span className="font-semibold text-gray-900">틱톡끼리</span>만 매칭이
+            이루어집니다.
+          </p>
+
+          <p className="text-xs text-gray-500">
+            상대방이 나를 어떤 아이디로 등록할지 알 수 없기 때문에
+            <br />
+            인스타그램과 틱톡 아이디를 모두 입력하는 것을 권장드립니다.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

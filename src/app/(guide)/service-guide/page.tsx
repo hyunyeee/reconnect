@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Info, User, Heart, MessageSquare } from "lucide-react";
+import { Info, User, Heart, MessageSquare, Instagram } from "lucide-react";
 import { BackHeader } from "@/components/layout/BackHeader";
 
 export default function ServiceGuidePage() {
@@ -48,11 +48,29 @@ export default function ServiceGuidePage() {
           <p className="text-sm">
             다시 만나고 싶은 상대방을 특정하기 위해
             <br />
-            이름, 전화번호, 인스타그램 아이디를 입력합니다.
+            이름, 전화번호, 인스타그램 또는 틱톡 아이디를 입력합니다.
           </p>
           <p className="mt-2 text-xs text-gray-500">
             입력 정보는 매칭 확인을 위한 기준으로만 사용됩니다.
           </p>
+        </section>
+
+        <section className="rounded-xl border bg-white p-5 shadow-sm">
+          <h2 className="mb-2 font-semibold text-gray-900">📱 플랫폼 기준 매칭 방식</h2>
+
+          <p className="text-sm leading-relaxed">
+            인스타그램 아이디는 <strong>인스타그램끼리</strong>만,
+            <br />
+            틱톡 아이디는 <strong>틱톡끼리</strong>만 매칭이 이루어집니다.
+          </p>
+
+          <div className="mt-3 rounded-lg bg-gray-50 p-3 text-xs text-gray-600">
+            상대방이 나를 어떤 아이디로 등록할지 알 수 없기 때문에
+            <br />
+            <span className="font-medium text-gray-800">
+              인스타그램과 틱톡 아이디를 모두 입력하는 것을 권장드립니다.
+            </span>
+          </div>
         </section>
 
         <section className="rounded-xl border bg-white p-5 shadow-sm">
