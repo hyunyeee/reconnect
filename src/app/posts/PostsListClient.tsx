@@ -8,7 +8,7 @@ import { usePostPaged } from "@/hooks/query/usePost";
 import { PinnedNotice } from "@/components/post/PinnedNotice";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 1;
 
 export default function PostsListClient() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function PostsListClient() {
     );
   }
 
-  const { content, totalPages, number } = data.data;
+  const { content, totalPages, pageNumber } = data.data;
 
   if (content.length === 0) {
     return (
@@ -98,8 +98,8 @@ export default function PostsListClient() {
           <Button
             key={i}
             size="sm"
-            variant={i === number ? "default" : "outline"}
-            className={cn(i === number && "bg-main-pink hover:bg-main-pink text-white")}
+            variant={i === pageNumber ? "default" : "outline"}
+            className={cn(i === pageNumber && "bg-main-pink hover:bg-main-pink text-white")}
             onClick={() => movePage(i)}
           >
             {i + 1}

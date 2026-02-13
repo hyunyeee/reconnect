@@ -16,7 +16,7 @@ interface PostPagedResponse {
   content: Post[];
   totalPages: number;
   totalElements: number;
-  number: number; // current page
+  pageNumber: number; // current page
 }
 
 interface PostPagedParams {
