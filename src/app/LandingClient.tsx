@@ -9,26 +9,26 @@ import { useAtomValue } from "jotai";
 import { authAtom } from "@/atoms/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLogout } from "@/hooks/query/useAuth";
-import { useLandingAnimation } from "@/hooks/useLandingAnimation";
+// import { useLandingAnimation } from "@/hooks/useLandingAnimation"; // LCP 테스트용 주석
 import FloatingButtons from "@/components/layout/FloatingButtons/FloatingButtons";
-import { PopAnimatedText } from "@/styles/PopAnimatedText";
+// import { PopAnimatedText } from "@/styles/PopAnimatedText"; // LCP 테스트용 주석
 import { MyPageNavbar } from "@/components/layout/MyPageNavbar";
 
-/** ===============================
- *  🚧 점검 모드 스위치
- *  서버 복구되면 false로만 바꾸면 끝
- *  =============================== */
 const IS_MAINTENANCE = false;
 
 export default function LandingClient() {
-  const [h1Scope, animateH1] = useAnimate();
-  const [descScope, animateDesc] = useAnimate();
-  const [buttonsScope, animateButtons] = useAnimate();
+  const [h1Scope] = useAnimate();
+  const [descScope] = useAnimate();
+  const [buttonsScope] = useAnimate();
 
   const { isLoggedIn } = useAtomValue(authAtom);
   const queryClient = useQueryClient();
   const logout = useLogout();
 
+  /* ===============================
+     LCP 테스트용 애니메이션 비활성화
+  =============================== */
+  /*
   useLandingAnimation({
     animateH1,
     animateDesc,
@@ -36,10 +36,10 @@ export default function LandingClient() {
     descScope,
     buttonsScope,
   });
+  */
 
   return (
     <>
-      {/* ================= 우측 상단 햄버거 ================= */}
       {!IS_MAINTENANCE && isLoggedIn && (
         <div className="pointer-events-auto fixed top-4 right-4 z-[9999]">
           <MyPageNavbar />
@@ -47,16 +47,18 @@ export default function LandingClient() {
       )}
 
       <main className="relative flex min-h-screen max-w-md flex-col px-4 py-6 sm:max-w-lg md:max-w-xl">
-        {/* ================= 메인 콘텐츠 ================= */}
         <div className="flex flex-1 flex-col items-center justify-center">
           <div className="w-full">
-            {/* 하트 아이콘 */}
+            {/* 하트 */}
             <div className="relative mb-6 size-6">
               <Heart className="fill-main-pink text-main-pink absolute inset-0" />
               <Heart className="fill-main-pink text-main-pink/60 absolute inset-0 animate-ping duration-1700" />
             </div>
 
-            {/* 타이틀 */}
+            {/* ================= 타이틀 ================= */}
+
+            {/* 기존 애니메이션 버전 (복구용) */}
+            {/*
             <PopAnimatedText
               scope={h1Scope}
               texts={["다시 만나고 싶은", "사람이 있나요?"]}
@@ -66,8 +68,20 @@ export default function LandingClient() {
                 { target: "람", className: "text-main-pink" },
               ]}
             />
+            */}
 
-            {/* 설명 문구 */}
+            {/* LCP 테스트용 정적 타이틀 */}
+            <h1
+              ref={h1Scope}
+              className="mb-5 text-[2.25rem] leading-tight font-extrabold tracking-tight text-gray-900 sm:text-[2.75rem] md:text-[3.25rem]"
+            >
+              다시 만나고 싶은 <span className="text-main-pink">사람</span>이 있나요?
+            </h1>
+
+            {/* ================= 설명 문구 ================= */}
+
+            {/* 기존 애니메이션 버전 (복구용) */}
+            {/*
             <p
               ref={descScope}
               style={{ opacity: 0, transform: "translateY(20px)" }}
@@ -75,36 +89,24 @@ export default function LandingClient() {
             >
               가장 소중한 순간의 기억을 운명적인 재회로 이어드립니다.
             </p>
+            */}
 
-            {/* ================= CTA / 점검 영역 ================= */}
+            {/* LCP 테스트용 정적 버전 */}
+            <p
+              ref={descScope}
+              className="text-sm leading-relaxed text-gray-600 sm:text-base md:text-lg"
+            >
+              가장 소중한 순간의 기억을 운명적인 재회로 이어드립니다.
+            </p>
+
+            {/* ================= CTA ================= */}
+
             {IS_MAINTENANCE ? (
-              <div
-                ref={buttonsScope}
-                style={{ opacity: 0, transform: "translateY(20px)" }}
-                className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center"
-              >
+              <div className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center">
                 <p className="text-base font-semibold text-gray-800">🚧 서비스 점검 중입니다</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  현재 기능 개선 작업으로 서비스 이용이 제한됩니다.
-                  <br />
-                  준비가 완료되는 대로 다시 오픈하겠습니다. 💗
-                </p>
-
-                <Button
-                  disabled
-                  className="mt-6 h-11 w-full cursor-not-allowed bg-gray-300 text-sm font-medium text-gray-500"
-                >
-                  점검 중
-                </Button>
-
-                <p className="mt-3 text-xs text-gray-400">2/9(월) 오픈 예정입니다</p>
               </div>
             ) : (
-              <div
-                ref={buttonsScope}
-                style={{ opacity: 0, transform: "translateY(20px)" }}
-                className="mt-12 space-y-3"
-              >
+              <div ref={buttonsScope} className="mt-12 space-y-3">
                 <Link href={isLoggedIn ? "/match" : "/login"}>
                   <Button className="group bg-main-pink h-11 w-full text-sm font-medium text-white hover:bg-[#A41847] sm:text-base">
                     {isLoggedIn ? "💞 매칭 결과 확인하기" : "✨ 다시 만나고 싶어요"}
@@ -148,7 +150,6 @@ export default function LandingClient() {
           </div>
         </div>
 
-        {/* ================= 고정 문의 버튼 ================= */}
         {!IS_MAINTENANCE && <FloatingButtons />}
       </main>
     </>
